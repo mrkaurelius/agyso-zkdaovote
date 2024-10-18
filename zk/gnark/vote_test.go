@@ -42,12 +42,12 @@ func TestCircuit(t *testing.T) {
 	_ = vk
 	assignment := CircuitMain{}
 
-	assignment.Weight = weight
+	assignment.VoteWeight = weight
 	assignment.MasterPubKey.X = pub.X
 	assignment.MasterPubKey.Y = pub.Y
 	for i := 0; i < COUNT; i++ {
 		assignment.Randoms[i] = randoms[i]
-		assignment.Vote[i] = votes[i]
+		assignment.Vote[i] = addVotes[i]
 
 		assignment.EncVoteNew.ElGamals[i].Left.X = newEncVotes.ElGamals[i].Left.X
 		assignment.EncVoteNew.ElGamals[i].Left.Y = newEncVotes.ElGamals[i].Left.Y
@@ -64,9 +64,8 @@ func TestCircuit(t *testing.T) {
 	publicWitness, _ := witness.Public()
 
 	// create proof
-	proof, error := groth16.Prove(ccs, pk, witness)
+	proof, _ := groth16.Prove(ccs, pk, witness)
 
-	print(error)
 	_ = publicWitness
 	_ = proof
 }

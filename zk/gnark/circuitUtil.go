@@ -7,7 +7,7 @@ import (
 )
 
 type CircuitMain struct {
-	Weight       frontend.Variable    `gnark:",public"`
+	VoteWeight   frontend.Variable    `gnark:",public"`
 	MasterPubKey twistededwards.Point `gnark:",public"`
 	Vote         [4]frontend.Variable
 	Randoms      [4]frontend.Variable
@@ -83,8 +83,9 @@ func (circuit *CircuitMain) Define(api frontend.API) error {
 	insideEncVoteNew := AddVotesCircuit(curve, circuit.EncVoteOld, insideEncAddVote)
 
 	CheckElGamalEqualityCircuit(api, insideEncVoteNew, circuit.EncVoteNew)
-	CheckVoteRangeCircuit(api, circuit.Weight, circuit.Vote[:])
+	CheckVoteRangeCircuit(api, circuit.VoteWeight, circuit.Vote[:])
 
+	_ = insideEncVoteNew
 	_ = curve
 	return nil
 }
