@@ -2,37 +2,18 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/frontend/cs/r1cs"
-	"github.com/consensys/gnark/std/algebra/native/twistededwards"
 )
+
+const COUNT = 4
 
 /*
 Public tag:
 `gnark:",public"`
 */
-type CircuitMain struct {
-	Weight       frontend.Variable    `gnark:",public"`
-	MasterPubKey twistededwards.Point `gnark:",public"`
-
-	VoteOld1 twistededwards.Point `gnark:",public"`
-	VoteOld2 twistededwards.Point `gnark:",public"`
-	VoteOld3 twistededwards.Point `gnark:",public"`
-	VoteOld4 twistededwards.Point `gnark:",public"`
-
-	VoteNew1 twistededwards.Point `gnark:",public"`
-	VoteNew2 twistededwards.Point `gnark:",public"`
-	VoteNew3 twistededwards.Point `gnark:",public"`
-	VoteNew4 twistededwards.Point `gnark:",public"`
-}
-
-type CircuitCipher struct {
-	Left  twistededwards.Point
-	Right twistededwards.Point
-}
 
 ///////////////////
 
