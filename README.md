@@ -1,6 +1,6 @@
 # agyso-daovote
 
-Privacy preserving dao voting.
+Privacy preserving dao voting using plonk.
 
 ## Aligned docs
 

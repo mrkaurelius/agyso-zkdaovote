@@ -1,5 +1,8 @@
-# agyso-daovote
+# agyso-daovote zk
 
+TODO
+
+- use wallet 
 
 ## daovote-service
 

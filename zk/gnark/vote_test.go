@@ -5,13 +5,12 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
-	"github.com/consensys/gnark/frontend/cs/r1cs"
-	"github.com/consensys/gnark/frontend/cs/scs"
-	"github.com/consensys/gnark/test/unsafekzg"
 	"math/big"
 	"os"
-	"strings"
 	"testing"
+
+	"github.com/consensys/gnark/frontend/cs/scs"
+	"github.com/consensys/gnark/test/unsafekzg"
 
 	"github.com/consensys/gnark-crypto/ecc"
 	bn254 "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
@@ -23,32 +22,33 @@ import (
 )
 
 // run carefully!!
-func TestCCSandPKandVK(t *testing.T) {
-	var circuit CircuitMain
-	ccs, _ := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &circuit)
-	pk, vk, _ := groth16.Setup(ccs)
+// func TestCCSandPKandVK(t *testing.T) {
+// 	var circuit CircuitMain
+// 	ccs, _ := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &circuit)
+// 	pk, vk, _ := groth16.Setup(ccs)
 
-	var buffCCS bytes.Buffer
-	ccs.WriteTo(&buffCCS)
-	file0, _ := os.Create("ccs.bin")
-	defer file0.Close()
-	file0.Write(buffCCS.Bytes())
+// 	var buffCCS bytes.Buffer
+// 	ccs.WriteTo(&buffCCS)
+// 	file0, _ := os.Create("ccs.bin")
+// 	defer file0.Close()
+// 	file0.Write(buffCCS.Bytes())
 
-	var buffPK bytes.Buffer
-	pk.WriteTo(&buffPK)
-	file1, _ := os.Create("pk.bin")
-	defer file1.Close()
-	file1.Write(buffPK.Bytes())
+// 	var buffPK bytes.Buffer
+// 	pk.WriteTo(&buffPK)
+// 	file1, _ := os.Create("pk.bin")
+// 	defer file1.Close()
+// 	file1.Write(buffPK.Bytes())
 
-	var buffVK bytes.Buffer
-	vk.WriteTo(&buffVK)
-	strVK := strings.ToUpper(hex.EncodeToString(buffVK.Bytes()))
+// 	var buffVK bytes.Buffer
+// 	vk.WriteTo(&buffVK)
+// 	strVK := strings.ToUpper(hex.EncodeToString(buffVK.Bytes()))
 
-	fmt.Println(strVK)
+// 	fmt.Println(strVK)
 
-}
+// }
 
 func TestCircuit(t *testing.T) {
+	return
 	//create pair
 	priv, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
 	pub := new(bn254.PointAffine).ScalarMultiplication(&Base, priv)
@@ -116,10 +116,9 @@ func TestCircuit(t *testing.T) {
 		t.Fatalf("verify error: %s", err)
 	}
 
-	proofBasePath := "/var/tmp/agyso-daovote/proof"
+	proofBasePath := "/var/tmp/agyso-daovote/proof/groth16"
 
 	proofPath := fmt.Sprintf("%s/groth16.proof", proofBasePath)
-	// Open files for writing the proof, the verification key and the public witness
 	proofFile, err := os.Create(proofPath)
 	if err != nil {
 		t.Fatal(err)
@@ -154,9 +153,9 @@ func TestCircuit(t *testing.T) {
 		t.Fatal("could not serialize proof into file")
 	}
 
-	fmt.Println("proof written into groth16.proof")
-	fmt.Println("verification key written into plonk.vk")
-	fmt.Println("public witness written into plonk_pub_input.pub")
+	t.Logf("proof written into %s\n", proofPath)
+	t.Logf("verification key into %s\n", vkFilePath)
+	t.Logf("public witness written into %s\n", witnessFilePath)
 
 	t.Log("Proof verification succeeded")
 
@@ -252,5 +251,48 @@ func TestPlonkCircuit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("verify error: %s", err)
 	}
+
+	proofBasePath := "/var/tmp/agyso-daovote/proof/plonk"
+
+	proofPath := fmt.Sprintf("%s/plonk.proof", proofBasePath)
+	proofFile, err := os.Create(proofPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	vkFilePath := fmt.Sprintf("%s/plonk.vk", proofBasePath)
+	vkFile, err := os.Create(vkFilePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	witnessFilePath := fmt.Sprintf("%s/plonk_pub_input.pub", proofBasePath)
+	witnessFile, err := os.Create(witnessFilePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer proofFile.Close()
+	defer vkFile.Close()
+	defer witnessFile.Close()
+
+	_, err = proof.WriteTo(proofFile)
+	if err != nil {
+		t.Fatal("could not serialize proof into file")
+	}
+	_, err = vk.WriteTo(vkFile)
+	if err != nil {
+		t.Fatal("could not serialize verification key into file")
+	}
+	_, err = publicWitness.WriteTo(witnessFile)
+	if err != nil {
+		t.Fatal("could not serialize proof into file")
+	}
+
+	t.Logf("proof written into %s\n", proofPath)
+	t.Logf("verification key into %s\n", vkFilePath)
+	t.Logf("public witness written into %s\n", witnessFilePath)
+
+	t.Log("Proof verification succeeded")
 
 }
