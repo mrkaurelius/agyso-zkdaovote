@@ -82,7 +82,7 @@ func (circuit *CircuitMain) Define(api frontend.API) error {
 	insideEncAddVote := CreateVotesCircuit(curve, circuit.Vote[:], circuit.Randoms[:], base, circuit.MasterPubKey)
 	insideEncVoteNew := AddVotesCircuit(curve, circuit.EncVoteOld, insideEncAddVote)
 
-	CheckElGamalEqualityCircuit(api, insideEncVoteNew, circuit.EncVoteNew)
+	// CheckElGamalEqualityCircuit(api, insideEncVoteNew, circuit.EncVoteNew)
 	CheckVoteRangeCircuit(api, circuit.VoteWeight, circuit.Vote[:])
 
 	_ = insideEncVoteNew

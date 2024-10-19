@@ -45,6 +45,7 @@ func TestCircuit(t *testing.T) {
 	assignment.VoteWeight = weight
 	assignment.MasterPubKey.X = pub.X
 	assignment.MasterPubKey.Y = pub.Y
+
 	for i := 0; i < COUNT; i++ {
 		assignment.Randoms[i] = randoms[i]
 		assignment.Vote[i] = addVotes[i]
@@ -64,8 +65,16 @@ func TestCircuit(t *testing.T) {
 	publicWitness, _ := witness.Public()
 
 	// create proof
-	proof, _ := groth16.Prove(ccs, pk, witness)
+	proof, err := groth16.Prove(ccs, pk, witness)
+	if err != nil {
+		t.Fatalf("prove error: %s", err)
+	}
+	t.Logf("proof: %+v", proof)
 
-	_ = publicWitness
-	_ = proof
+	err = groth16.Verify(proof, vk, publicWitness)
+	if err != nil {
+		t.Fatalf("verify error: %s", err)
+	}
+
+	t.Log("Proof verification succeeded")
 }

@@ -1,9 +1,10 @@
 package zk
 
 import (
+	"math/big"
+
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	bn254 "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
-	"math/big"
 )
 
 var Base = bn254.GetEdwardsCurve().Base

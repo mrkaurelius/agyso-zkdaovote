@@ -1,5 +1,5 @@
-all:
-	go build -o build/zk cmd/main.go
+backend:
+	go build -o build/daovote-server cmd/daovote-service/main.go
 
-web:
-	GOOS=js GOARCH=wasm go build -o build/zk.wasm cmd/main.go
+webasm:
+	GOOS=js GOARCH=wasm go build -o build/daovote.wasm cmd/daovote-wasm/main.go
