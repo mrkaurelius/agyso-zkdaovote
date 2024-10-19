@@ -47,7 +47,7 @@ func TestCircuit(t *testing.T) {
 	assignment.MasterPubKey.Y = pub.Y
 
 	for i := 0; i < COUNT; i++ {
-		assignment.Randoms[i] = randoms[i]
+		assignment.Randoms[i] = addRandoms[i]
 		assignment.Vote[i] = addVotes[i]
 
 		assignment.EncVoteNew.ElGamals[i].Left.X = newEncVotes.ElGamals[i].Left.X
