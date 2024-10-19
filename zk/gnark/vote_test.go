@@ -13,6 +13,7 @@ import (
 	"github.com/consensys/gnark-crypto/ecc"
 	bn254 "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
 	"github.com/consensys/gnark/backend/groth16"
+	wit "github.com/consensys/gnark/backend/witness"
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/frontend/cs/r1cs"
 )
@@ -94,7 +95,10 @@ func TestCircuit(t *testing.T) {
 	}
 
 	witness, _ := frontend.NewWitness(&assignment, ecc.BN254.ScalarField())
-	publicWitness, _ := witness.Public()
+	publicWitness, err := witness.Public()
+	if err != nil {
+		t.Fatalf("public witnes err %s", err)
+	}
 
 	// create proof
 	proof, err := groth16.Prove(ccs, pk, witness)
@@ -108,5 +112,71 @@ func TestCircuit(t *testing.T) {
 		t.Fatalf("verify error: %s", err)
 	}
 
+	proofBasePath := "/var/tmp/agyso-daovote/proof"
+
+	proofPath := fmt.Sprintf("%s/groth16.proof", proofBasePath)
+	// Open files for writing the proof, the verification key and the public witness
+	proofFile, err := os.Create(proofPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	vkFilePath := fmt.Sprintf("%s/groth16.vk", proofBasePath)
+	vkFile, err := os.Create(vkFilePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	witnessFilePath := fmt.Sprintf("%s/groth16_pub_input.pub", proofBasePath)
+	witnessFile, err := os.Create(witnessFilePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer proofFile.Close()
+	defer vkFile.Close()
+	defer witnessFile.Close()
+
+	_, err = proof.WriteTo(proofFile)
+	if err != nil {
+		t.Fatal("could not serialize proof into file")
+	}
+	_, err = vk.WriteTo(vkFile)
+	if err != nil {
+		t.Fatal("could not serialize verification key into file")
+	}
+	_, err = publicWitness.WriteTo(witnessFile)
+	if err != nil {
+		t.Fatal("could not serialize proof into file")
+	}
+
+	fmt.Println("proof written into groth16.proof")
+	fmt.Println("verification key written into plonk.vk")
+	fmt.Println("public witness written into plonk_pub_input.pub")
+
 	t.Log("Proof verification succeeded")
+
+	// >>>>>> Proof serialisation
+
+	witnessByte, _ := os.ReadFile(witnessFilePath)
+	witnessPrime, _ := wit.New(ecc.BN254.ScalarField()) // Serialised witness
+	witnessPrime.ReadFrom(bytes.NewReader(witnessByte))
+	fmt.Printf("witnessPrime: %+v\n", witnessPrime)
+
+	proofByte, _ := os.ReadFile(proofPath)
+	proofPrime := groth16.NewProof(ecc.BN254) // Serialised witness
+	proofPrime.ReadFrom(bytes.NewReader(proofByte))
+	fmt.Printf("proofPrime: %+v\n", proofPrime)
+
+	vkByte, _ := os.ReadFile(vkFilePath)
+	vkPrime := groth16.NewVerifyingKey(ecc.BN254) // Serialised witness
+	vkPrime.ReadFrom(bytes.NewReader(vkByte))
+	fmt.Printf("vkPrime: %+v\n", vkPrime)
+
+	err = groth16.Verify(proofPrime, vkPrime, witnessPrime)
+	if err != nil {
+		t.Fatalf("serialised verify error: %s", err)
+	}
+
+	t.Log("Serialised proof verification succeeded")
 }

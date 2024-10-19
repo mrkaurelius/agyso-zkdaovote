@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -ex
+
+PROOF_BASE_PATH="/var/tmp/agyso-daovote/proof"
+
+# remove_proof() {
+#     rm  $PROOF_BASE_PATH"/*"
+# }
+
+submit_proof() {
+    # rm -rf aligned_verification_data
+
+    aligned submit \
+    --proving_system Groth16Bn254 \
+    --proof "$PROOF_BASE_PATH/groth16.proof" \
+    --public_input "$PROOF_BASE_PATH/groth16_pub_input.pub" \
+    --vk "$PROOF_BASE_PATH/groth16.vk" \
+    --batcher_url wss://batcher.alignedlayer.com \
+    --network holesky \
+    --rpc_url https://ethereum-holesky-rpc.publicnode.com 
+}
+
+submit_proof
+
+# remove_proof

@@ -4,10 +4,15 @@
     <!-- Load go wasm  -->
     <script src="wasm_exec.js"></script>
     <script>
-      const go = new Go();
+      var go = new Go();
+
       WebAssembly.instantiateStreaming(fetch("zk.wasm"), go.importObject).then(
         (result) => {
+
+          console.log(go)
+
           go.run(result.instance);
+
         }
       );
     </script>

@@ -3,7 +3,7 @@
 
 ## daovote-service
 
-Proof generation requet
+Proof generation request
 
 ### Generate Proof Request
 

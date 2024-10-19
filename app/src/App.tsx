@@ -1,6 +1,16 @@
-import { useState } from "react";
+import { useEffect } from "react";
+
+const go = new Go();
 
 function App() {
+  useEffect(() => {
+    WebAssembly.instantiateStreaming(fetch("zk.wasm"), go.importObject).then(
+      (result) => {
+        go.run(result.instance);
+      }
+    );
+  });
+
   return (
     <>
       <div>
