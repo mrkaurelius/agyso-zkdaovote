@@ -1,8 +1,13 @@
 package zk
 
 import (
+	"bytes"
 	"crypto/rand"
+	"encoding/hex"
+	"fmt"
 	"math/big"
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/consensys/gnark-crypto/ecc"
@@ -11,6 +16,32 @@ import (
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/frontend/cs/r1cs"
 )
+
+// run carefully!!
+func TestCCSandPKandVK(t *testing.T) {
+	var circuit CircuitMain
+	ccs, _ := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &circuit)
+	pk, vk, _ := groth16.Setup(ccs)
+
+	var buffCCS bytes.Buffer
+	ccs.WriteTo(&buffCCS)
+	file0, _ := os.Create("ccs.bin")
+	defer file0.Close()
+	file0.Write(buffCCS.Bytes())
+
+	var buffPK bytes.Buffer
+	pk.WriteTo(&buffPK)
+	file1, _ := os.Create("pk.bin")
+	defer file1.Close()
+	file1.Write(buffPK.Bytes())
+
+	var buffVK bytes.Buffer
+	vk.WriteTo(&buffVK)
+	strVK := strings.ToUpper(hex.EncodeToString(buffVK.Bytes()))
+
+	fmt.Println(strVK)
+
+}
 
 func TestCircuit(t *testing.T) {
 	//create pair
@@ -34,12 +65,13 @@ func TestCircuit(t *testing.T) {
 	newEncVotes := AddVotes(currentEncVotes, addEncVotes)
 	//
 
-	var circuit CircuitMain
-	ccs, _ := frontend.Compile(ecc.BN254.ScalarField(), r1cs.NewBuilder, &circuit)
+	ccs := GetCCS()
+	pk := GetPK()
 
-	pk, vk, _ := groth16.Setup(ccs)
+	vkBytes, _ := hex.DecodeString(VKStr)
+	vk := groth16.NewVerifyingKey(ecc.BN254)
+	vk.ReadFrom(bytes.NewReader(vkBytes))
 
-	_ = vk
 	assignment := CircuitMain{}
 
 	assignment.VoteWeight = weight
