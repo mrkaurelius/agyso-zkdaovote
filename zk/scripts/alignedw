@@ -2,12 +2,12 @@
 
 set -ex
 
-# PROOF_BASE_PATH="/var/tmp/agyso-daovote/proof/groth16"
+# aligned wrapper script
+
 PROOF_BASE_PATH="/var/tmp/agyso-daovote/proof/plonk"
 
 submit_proof() {
-    # rm -rf aligned_verification_data
-
+    rm -rf aligned_verification_data
     aligned submit \
     --proving_system GnarkPlonkBn254 \
     --proof "$PROOF_BASE_PATH/plonk.proof" \
@@ -17,5 +17,8 @@ submit_proof() {
     --network holesky \
     --rpc_url https://ethereum-holesky-rpc.publicnode.com 
 }
+
+# Currently using embedded key
+# aligned_balance() { }
 
 submit_proof
