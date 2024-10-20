@@ -1,6 +1,9 @@
-# agyso-daovote smartcontracts
+# AGYSO Dao Vote Smartcontrat
 
-```sh
-ALIGNED_SERVICE_MANAGER_ADDRESS=0x58F280BeBE9B34c9939C3C39e0890C81f163B623 # for Holesky
-PAYMENT_SERVICE_ADDRESS=0x815aeCA64a974297942D2Bbf034ABEe22a38A003 # for Holesky
+```shell
+npx hardhat help
+npx hardhat test
+REPORT_GAS=true npx hardhat test
+npx hardhat node
+npx hardhat ignition deploy ./ignition/modules/Lock.ts
 ```

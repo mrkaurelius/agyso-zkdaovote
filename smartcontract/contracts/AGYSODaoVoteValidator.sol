@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.12;
 
-contract FibonacciValidator {
+contract AGYSODaoVoteValidator {
     address public alignedServiceManager;
     address public paymentServiceAddr;
     bytes32 public fibonacciProgramId;
