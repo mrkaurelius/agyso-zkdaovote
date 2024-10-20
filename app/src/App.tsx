@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-
+import { Box } from "@chakra-ui/react";
+import ConnectWallet from "./components/ConnectWallet";
+import BulletVoting from "./components/BulletVoting";
 const go = new Go();
-
 function App() {
   useEffect(() => {
     WebAssembly.instantiateStreaming(fetch("zk.wasm"), go.importObject).then(
@@ -12,11 +13,12 @@ function App() {
   });
 
   return (
-    <>
-      <div>
-        <h1>Merhaba Yalan Dunya!</h1>
-      </div>
-    </>
+    <Box>
+      <ConnectWallet></ConnectWallet>
+      <Box>
+        <BulletVoting></BulletVoting>
+      </Box>
+    </Box>
   );
 }
 
