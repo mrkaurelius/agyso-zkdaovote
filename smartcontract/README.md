@@ -1,4 +1,4 @@
-# AGYSO Dao Vote Smartcontrat
+# AGYSO Dao Vote Smartcontract
 
 ```shell
 npx hardhat help
