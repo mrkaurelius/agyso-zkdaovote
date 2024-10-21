@@ -4,12 +4,45 @@ import (
 	"bytes"
 	"encoding/hex"
 	"github.com/consensys/gnark-crypto/ecc"
+	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	bn254 "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/backend/plonk"
 	"github.com/consensys/gnark/constraint"
 	"os"
 )
+
+func StringToPointUncompress(strX, strY string) *bn254.PointAffine {
+
+	x, _ := new(fr.Element).SetString(strX)
+	y, _ := new(fr.Element).SetString(strY)
+	pub := new(bn254.PointAffine)
+	pub.X = *x
+	pub.Y = *y
+
+	return pub
+}
+
+func StringsToElGamalUncompress(str1X, str1Y, str2X, str2Y string) *ElGamal {
+	left := StringToPointUncompress(str1X, str1Y)
+	right := StringToPointUncompress(str2X, str2Y)
+
+	cipher := new(ElGamal)
+	cipher.Left = left
+	cipher.Right = right
+
+	return cipher
+}
+
+func StringsToVotesUncompress(str1X, str1Y, str2X, str2Y, str3X, str3Y, str4X, str4Y, str5X, str5Y, str6X, str6Y, str7X, str7Y, str8X, str8Y string) *Votes {
+	votes := new(Votes)
+	votes.ElGamals[0] = StringsToElGamalUncompress(str1X, str1Y, str2X, str2Y)
+	votes.ElGamals[1] = StringsToElGamalUncompress(str3X, str3Y, str4X, str4Y)
+	votes.ElGamals[2] = StringsToElGamalUncompress(str5X, str5Y, str6X, str6Y)
+	votes.ElGamals[3] = StringsToElGamalUncompress(str7X, str7Y, str8X, str8Y)
+
+	return votes
+}
 
 func StringToPoint(str string) *bn254.PointAffine {
 	pubArray, _ := hex.DecodeString(str)
