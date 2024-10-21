@@ -10,29 +10,52 @@ const getBalance = async (hre: HardhatRuntimeEnvironment) => {
   console.log(balance);
 };
 
-const fibonacciValidatorVerify = async (hre: HardhatRuntimeEnvironment) => {
+const onChainVerify = async (hre: HardhatRuntimeEnvironment) => {
   const ethers = hre.ethers;
 
   const signer = (await ethers.getSigners())[0];
 
-  const constractAddres = "0xB1d333976A7f76aae952490cB888047b504DC1f0";
+  const contractAddress = "0x3D5f8dC923a49cE37Ea940173E7CC35F5893a6eb";
 
-  const contract = await hre.ethers.getContractAt(
-    "FibonacciValidator",
-    constractAddres,
-    signer
+  // proof_commitment_hex: c8e5930a4f7dc527599d386f9c809c3da8c6bc4b1da2eb506bd9265ef1b42e17
+  // public_input_commitment_hex 695a27b7a1c0481ee771c8dc6f737d08839cfd7662bde404eb6690cdd82258ae
+  // proving_system_aux_data_commitment_hex: b083cb29b3e55dad4e55390a0ef408f15d94f8099a8ccab7bbc3b287951e653f
+  // proof_generator_addr_hex: 66f9664f97f2b50f62d13ea064982f936de76657
+  // batch_merkle_root_hex: 977c4faa94afc8857065c1fe1739e3cfc9bd36513daaa393a0cbc6aec35a8b7e
+  // batch_inclusion_proof: 42d052bb9ad42c82bb3c64a34eed7e94d0024ebe7b6e652ca6da56b2d7656003b6c4b3938babaf4aa90da44b04d9d702efe2958938939f56c5be3055ae7ce754
+  // index_in_batch_hex: 3
+
+  const contract = await hre.ethers.getContractAt("AGYSODaoVoteValidator", contractAddress, signer);
+
+  const pubInputBytes =
+    "0x000000230000000000000023000000000000000000000000000000000000000000000000000000000000000a18d1ea3c0a6c6f495f4b1ba5b3e5b883c69847716f6268f82b391f3ad16d8bcb2f2bc09c782fdadba8e3759799847ef34333ef90e94a7c2dddf29b3956d016ab248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa821af18a9e357c69656d345f82bbfebaaede7cf43cff9416de658e8758b28956015451f5653e56f9ed36261a2175ffa4c7f67be84a5b7bdef6d00dd3b1ab1bf2105b278a45f7d862cba85337a4d3cac8517e216310c15557d1c23a58eb053e62f15dd757b8a6db17ab0a67b97e09d8607d16e7c3ef44f80c60410787d78e9b727164335d6302bc34873dcb19cab4a1a55ac937599d5dbf12ad6dae94a3466a02f245896a437a95d9693e9e5433d6f5cdf3e250d46cf4e3b6394692ed77d19b4a8053ff930a6a96468f25bec4fbf6dce339a79039baa78289dd3ad98df5d1d4f370a0038e5dc5d45270857034d438c13aebd9d0329fda93966f39d6ab0389572fb1859684593052d6870f8ae0aeaca8fb2977bf3a686445334fa783aecda182e8e065275f25e2d10f34b46830e66b28d34c1dca2d113f0af8fed709496a1fefd242590889a49e02fdf6c75b490cbd3c4222594e6c47cee4d5bb648b5862a1d538219ec054508355397582ddae1e37e6f40dec1bbd30e9cd01af575dd8c6b01598a1eac3ccc8c91203e90f530c55c7f4880feaa9b4144b0cc1f003e0acb01fd3f5c299ef7bec96392620e368afde2549fc5a67f8d546cb6620109f8a4356a26860e11a67f87c0f641e36ff774d5d7ca0db874f71d572c7ed02b0a00cf813b8c6e8f2fe937654ffa49c1f87ea9aa98b2fb92a3db4b13ade46e7e95cc224e84fca8512519d7044ea5cb2cf2ad6276b49279abac933659a30360ce046d0ed4bd7b1ea01d3efc031887083c3f317d9a286f02afcc6e68695b228b32889640f46a7584b12eb1ffded9bdeec9b513d977960c8a61d18a25fd8fccceb66ffdbbd604039d771cee93810e5f22bae7ff01fe71a512df773c7963b49aa68da0537b4969fbef481414c2cbbf887d64bcca4f554cca69bd8f118330ef52c134f6f3194cc2ade629139ef3e9d44438303a4b9334364e241c845b2d1ff6bd17461bab5ec3cacd80af144c01a8bbd229bb05ccc58f1b4d48be60fd0ed9824efd5300e364ca9ff990a50337b6fb85687bbc9a7174a337cdc00b77c7935b46ea4409b0a552f9fefc66c01abe1f8e783e868f20075cec6938fc75bc86ebf2dbe44ad7b00f10d6f4862cea0dabb8c84def01fcea1d33e8ec516676611d358b6df437466af8d10e6710fdd11c2ca6963b3e8a376dc4dc514a8e43ee8b10961055ba6db10bcd664da651d25e202ecaa454e7f8d95b0b8d2363645fe0512cdd1f5e91065d5d2217a41b7ff0f00c8f7e00ab033afaa474167b2b715efbe1442213b34b8f984ba5a72b38de1b8c2db93170512d33cf7370047dcbb1b10503a6718429e36b6a983d51c2a655656f";
+
+  const proofCommitment = "0xc8e5930a4f7dc527599d386f9c809c3da8c6bc4b1da2eb506bd9265ef1b42e17";
+  const pubInputCommitment = "0x695a27b7a1c0481ee771c8dc6f737d08839cfd7662bde404eb6690cdd82258ae";
+  const proovingSystemAuxDataCommitment = "0xb083cb29b3e55dad4e55390a0ef408f15d94f8099a8ccab7bbc3b287951e653f"
+  const programIdCommitment = "0x2929292929292929292929292929292929292929292929292929292929292929";
+  const proofGeneratorAddr = "0x66f9664f97f2b50f62d13ea064982f936de76657";
+  const batchMerkleRoot = "0x977c4faa94afc8857065c1fe1739e3cfc9bd36513daaa393a0cbc6aec35a8b7e";
+  const merkleProof =
+    "0x42d052bb9ad42c82bb3c64a34eed7e94d0024ebe7b6e652ca6da56b2d7656003b6c4b3938babaf4aa90da44b04d9d702efe2958938939f56c5be3055ae7ce754";
+  const verificationDataBatchIndex = 3;
+
+  const contractResp = await contract.verifyBatchInclusion(
+    proofCommitment,
+    pubInputCommitment,
+    programIdCommitment,
+    proofGeneratorAddr,
+    batchMerkleRoot,
+    merkleProof,
+    verificationDataBatchIndex,
+    pubInputBytes
   );
 
-  // TODO BURADA KALDIM
-  // contract.verifyBatchInclusion()
-
-  console.log(contract);
+  console.log(contractResp);
 };
 
-const submitProof = async () => {};
-
 const aligned = async (args: any, hre: HardhatRuntimeEnvironment) => {
-  await submitProof();
+  await onChainVerify(hre);
 };
 
 export { aligned };

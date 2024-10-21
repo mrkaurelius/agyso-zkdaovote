@@ -29,21 +29,13 @@ const NETWORK: Network = Network::Holesky;
 
 #[tokio::main]
 async fn main() -> Result<(), SubmitError> {
-    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+    env_logger::Builder::from_env(Env::default().default_filter_or("debug")).init();
 
-    // Our private key
-    // let AGYSO_PRIVATE_KEY  = "63dc97fe651de68a37a0fe8b2c28c5e56fc4f699d3d352bf0be72210017febe4";
-
-    let anvil_private_key: &str =
-        "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6"; // Anvil address 9
-
-    let wallet = LocalWallet::from_str(anvil_private_key)
-        .expect("wallet creation error")
+    let wallet = LocalWallet::decrypt_keystore("../../vault/agyso-aligned", "")
+        .expect("Failed to decrypt keystore")
         .with_chain_id(17000u64);
 
-    let address_str = wallet.address().to_string();
-
-    println!("wallet address: {}", address_str);
+    println!("wallet address: {}", wallet.address().to_string());
 
     let proof = read_file(PathBuf::from(PROOF_FILE_PATH)).unwrap_or_default();
 
@@ -122,7 +114,6 @@ async fn main() -> Result<(), SubmitError> {
     info!("batch_inclusion_proof: {}", batch_inclusion_proof);
 
     info!("index_in_batch_hex: {}", ver_data.index_in_batch);
-
 
     info!(
         "https://explorer.alignedlayer.com/batches/0x{}",

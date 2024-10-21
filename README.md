@@ -7,10 +7,13 @@ Deployed Contract: TODO
 
 ## Directories
 
-# TODO 
+TODO
 
-- Submit proof using own address
+## TODO 
+
+- ~~Submit proof using own address~~
 - On chain zk proof verification
+- generate json in daovote-rs and put to proper place for aligned.ts usage
 
 ## Aligned Docs
 
