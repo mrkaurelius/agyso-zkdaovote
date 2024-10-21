@@ -17,6 +17,7 @@ import (
 	wit "github.com/consensys/gnark/backend/witness"
 	cs "github.com/consensys/gnark/constraint/bn254"
 	"github.com/consensys/gnark/frontend"
+	_ "github.com/consensys/gnark/frontend/cs/r1cs"
 	"github.com/consensys/gnark/frontend/cs/scs"
 	"github.com/consensys/gnark/test/unsafekzg"
 )
@@ -203,15 +204,23 @@ func TestPlonkCircuit(t *testing.T) {
 	//create pair
 	priv, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
 	pub := new(bn254.PointAffine).ScalarMultiplication(&Base, priv)
+	pubArray := pub.Bytes()
+	pubStr := hex.EncodeToString(pubArray[:])
 
+	println("pubStr: " + pubStr)
 	// weight
 	weight := new(big.Int).SetInt64(10)
 
 	// create current bc Votes
-	votes := []*big.Int{new(big.Int).SetInt64(10), new(big.Int).SetInt64(20), new(big.Int).SetInt64(30), new(big.Int).SetInt64(40)}
-	randoms := []*big.Int{new(big.Int).SetInt64(1111), new(big.Int).SetInt64(2222), new(big.Int).SetInt64(3333), new(big.Int).SetInt64(4444)}
+	votes := []*big.Int{new(big.Int).SetInt64(1), new(big.Int).SetInt64(1), new(big.Int).SetInt64(1), new(big.Int).SetInt64(1)}
+	randoms := []*big.Int{new(big.Int).SetInt64(1111), new(big.Int).SetInt64(1111), new(big.Int).SetInt64(1111), new(big.Int).SetInt64(1111)}
 	currentEncVotes := CreateVotes(votes, randoms, pub)
-
+	leftArray := currentEncVotes.ElGamals[0].Left.Bytes()
+	leftStr := hex.EncodeToString(leftArray[:])
+	println("leftStr: " + leftStr)
+	rightArray := currentEncVotes.ElGamals[0].Right.Bytes()
+	rightStr := hex.EncodeToString(rightArray[:])
+	println("rightStr: " + rightStr)
 	// create add Votes
 	addVotes := []*big.Int{new(big.Int).SetInt64(1), new(big.Int).SetInt64(2), new(big.Int).SetInt64(3), new(big.Int).SetInt64(4)}
 	addRandoms := []*big.Int{new(big.Int).SetInt64(111), new(big.Int).SetInt64(222), new(big.Int).SetInt64(333), new(big.Int).SetInt64(444)}
@@ -251,6 +260,11 @@ func TestPlonkCircuit(t *testing.T) {
 
 	witness, _ := frontend.NewWitness(&assignment, ecc.BN254.ScalarField())
 	publicWitness, err := witness.Public()
+
+	xxx, _ := publicWitness.MarshalBinary()
+
+	println(hex.EncodeToString(xxx))
+
 	if err != nil {
 		t.Fatalf("public witnes err %s", err)
 	}
@@ -267,47 +281,48 @@ func TestPlonkCircuit(t *testing.T) {
 		t.Fatalf("verify error: %s", err)
 	}
 
-	proofBasePath := "/var/tmp/agyso-daovote/proof/plonk"
+	/*
+		proofBasePath := "/var/tmp/agyso-daovote/proof/plonk"
 
-	proofPath := fmt.Sprintf("%s/plonk.proof", proofBasePath)
-	proofFile, err := os.Create(proofPath)
-	if err != nil {
-		t.Fatal(err)
-	}
+		proofPath := fmt.Sprintf("%s/plonk.proof", proofBasePath)
+		proofFile, err := os.Create(proofPath)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	vkFilePath := fmt.Sprintf("%s/plonk.vk", proofBasePath)
-	vkFile, err := os.Create(vkFilePath)
-	if err != nil {
-		t.Fatal(err)
-	}
+		vkFilePath := fmt.Sprintf("%s/plonk.vk", proofBasePath)
+		vkFile, err := os.Create(vkFilePath)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	witnessFilePath := fmt.Sprintf("%s/plonk_pub_input.pub", proofBasePath)
-	witnessFile, err := os.Create(witnessFilePath)
-	if err != nil {
-		t.Fatal(err)
-	}
+		witnessFilePath := fmt.Sprintf("%s/plonk_pub_input.pub", proofBasePath)
+		witnessFile, err := os.Create(witnessFilePath)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	defer proofFile.Close()
-	defer vkFile.Close()
-	defer witnessFile.Close()
+		defer proofFile.Close()
+		defer vkFile.Close()
+		defer witnessFile.Close()
 
-	_, err = proof.WriteTo(proofFile)
-	if err != nil {
-		t.Fatal("could not serialize proof into file")
-	}
-	_, err = vk.WriteTo(vkFile)
-	if err != nil {
-		t.Fatal("could not serialize verification key into file")
-	}
-	_, err = publicWitness.WriteTo(witnessFile)
-	if err != nil {
-		t.Fatal("could not serialize proof into file")
-	}
+		_, err = proof.WriteTo(proofFile)
+		if err != nil {
+			t.Fatal("could not serialize proof into file")
+		}
+		_, err = vk.WriteTo(vkFile)
+		if err != nil {
+			t.Fatal("could not serialize verification key into file")
+		}
+		_, err = publicWitness.WriteTo(witnessFile)
+		if err != nil {
+			t.Fatal("could not serialize proof into file")
+		}
 
-	t.Logf("proof written into %s\n", proofPath)
-	t.Logf("verification key into %s\n", vkFilePath)
-	t.Logf("public witness written into %s\n", witnessFilePath)
+		t.Logf("proof written into %s\n", proofPath)
+		t.Logf("verification key into %s\n", vkFilePath)
+		t.Logf("public witness written into %s\n", witnessFilePath)
 
-	t.Log("Proof verification succeeded")
-
+		t.Log("Proof verification succeeded")
+	*/
 }
