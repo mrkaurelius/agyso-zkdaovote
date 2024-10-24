@@ -3,19 +3,31 @@ package zk
 import (
 	"bytes"
 	"encoding/hex"
+	"os"
+
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	bn254 "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/backend/plonk"
 	"github.com/consensys/gnark/constraint"
-	"os"
 )
+
+func StringToVotesSolidity(str string) *Votes {
+	length := 64
+	return StringsToVotesUncompress(
+		str[0:length], str[length:2*length], str[2*length:3*length], str[3*length:4*length],
+		str[4*length:5*length], str[5*length:6*length], str[6*length:7*length], str[7*length:8*length],
+		str[8*length:9*length], str[9*length:10*length], str[10*length:11*length], str[11*length:12*length],
+		str[12*length:13*length], str[13*length:14*length], str[14*length:15*length], str[15*length:16*length])
+}
 
 func StringToPointUncompress(strX, strY string) *bn254.PointAffine {
 
-	x, _ := new(fr.Element).SetString(strX)
-	y, _ := new(fr.Element).SetString(strY)
+	arrayX, _ := hex.DecodeString(strX)
+	arrayY, _ := hex.DecodeString(strY)
+	x := new(fr.Element).SetBytes(arrayX)
+	y := new(fr.Element).SetBytes(arrayY)
 	pub := new(bn254.PointAffine)
 	pub.X = *x
 	pub.Y = *y

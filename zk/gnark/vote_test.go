@@ -202,7 +202,8 @@ func TestCircuit(t *testing.T) {
 
 func TestPlonkCircuit(t *testing.T) {
 	//create pair
-	priv, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
+	//priv, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
+	priv := new(big.Int).SetInt64(100)
 	pub := new(bn254.PointAffine).ScalarMultiplication(&Base, priv)
 	pubArray := pub.Bytes()
 	pubStr := hex.EncodeToString(pubArray[:])
@@ -215,12 +216,14 @@ func TestPlonkCircuit(t *testing.T) {
 	votes := []*big.Int{new(big.Int).SetInt64(1), new(big.Int).SetInt64(1), new(big.Int).SetInt64(1), new(big.Int).SetInt64(1)}
 	randoms := []*big.Int{new(big.Int).SetInt64(1111), new(big.Int).SetInt64(1111), new(big.Int).SetInt64(1111), new(big.Int).SetInt64(1111)}
 	currentEncVotes := CreateVotes(votes, randoms, pub)
-	leftArray := currentEncVotes.ElGamals[0].Left.Bytes()
-	leftStr := hex.EncodeToString(leftArray[:])
-	println("leftStr: " + leftStr)
-	rightArray := currentEncVotes.ElGamals[0].Right.Bytes()
-	rightStr := hex.EncodeToString(rightArray[:])
-	println("rightStr: " + rightStr)
+
+	// println("pub.X.String(): \n", pub.X.String())
+	// println("pub.Y.String(): \n", pub.Y.String())
+	// println("currentEncVotes.ElGamals[0].Left.X.String(): \n", currentEncVotes.ElGamals[0].Left.X.String())
+	// println("currentEncVotes.ElGamals[0].Left.Y.String(): \n", currentEncVotes.ElGamals[0].Left.Y.String())
+	// println("currentEncVotes.ElGamals[0].Right.X.String(): \n", currentEncVotes.ElGamals[0].Right.X.String())
+	// println("currentEncVotes.ElGamals[0].Right.Y.String(): \n", currentEncVotes.ElGamals[0].Right.Y.String())
+
 	// create add Votes
 	addVotes := []*big.Int{new(big.Int).SetInt64(1), new(big.Int).SetInt64(2), new(big.Int).SetInt64(3), new(big.Int).SetInt64(4)}
 	addRandoms := []*big.Int{new(big.Int).SetInt64(111), new(big.Int).SetInt64(222), new(big.Int).SetInt64(333), new(big.Int).SetInt64(444)}
@@ -228,7 +231,16 @@ func TestPlonkCircuit(t *testing.T) {
 
 	// create new stage of Votes
 	newEncVotes := AddVotes(currentEncVotes, addEncVotes)
+
 	//
+	arrayLX := newEncVotes.ElGamals[0].Left.X.Bytes()
+	fmt.Printf("newEncVotes.ElGamals[0].Left.X.String(): %v\n", hex.EncodeToString(arrayLX[:]))
+	arrayLY := newEncVotes.ElGamals[0].Left.Y.Bytes()
+	fmt.Printf("newEncVotes.ElGamals[0].Left.Y.String(): %v\n", hex.EncodeToString(arrayLY[:]))
+	arrayRX := newEncVotes.ElGamals[0].Right.X.Bytes()
+	fmt.Printf("newEncVotes.ElGamals[0].Right.X.String(): %v\n", hex.EncodeToString(arrayRX[:]))
+	arrayRY := newEncVotes.ElGamals[0].Right.Y.Bytes()
+	fmt.Printf("newEncVotes.ElGamals[0].Right.Y.String(): %v\n", hex.EncodeToString(arrayRY[:]))
 
 	ccs := GetCCSPlonk()
 	pk := GetPKPlonk()
@@ -262,9 +274,9 @@ func TestPlonkCircuit(t *testing.T) {
 	publicWitness, err := witness.Public()
 
 	xxx, _ := publicWitness.MarshalBinary()
-
-	println(hex.EncodeToString(xxx))
-
+	xxxStr := hex.EncodeToString(xxx)
+	votesPrime := StringToVotesSolidity(xxxStr[1240 : 1240+16*64])
+	_ = votesPrime
 	if err != nil {
 		t.Fatalf("public witnes err %s", err)
 	}
@@ -274,7 +286,7 @@ func TestPlonkCircuit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("prove error: %s", err)
 	}
-	t.Logf("proof: %+v", proof)
+	//t.Logf("proof: %+v", proof)
 
 	err = plonk.Verify(proof, vk, publicWitness)
 	if err != nil {
