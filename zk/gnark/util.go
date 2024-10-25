@@ -35,6 +35,24 @@ func StringToPointUncompress(strX, strY string) *bn254.PointAffine {
 	return pub
 }
 
+func zeroToVote(strX, strY string) *bn254.PointAffine {
+
+	x := new(fr.Element).SetZero()
+	y := new(fr.Element).SetOne()
+	zero := new(bn254.PointAffine)
+	zero.X = *x
+	zero.Y = *y
+
+	votes := new(Votes)
+
+	for i := 0; i < 4; i++ {
+		votes.ElGamals[i].Left = zero
+		votes.ElGamals[i].Right = zero
+	}
+
+	return zero
+}
+
 func StringsToElGamalUncompress(str1X, str1Y, str2X, str2Y string) *ElGamal {
 	left := StringToPointUncompress(str1X, str1Y)
 	right := StringToPointUncompress(str2X, str2Y)

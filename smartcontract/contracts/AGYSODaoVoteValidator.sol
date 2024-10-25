@@ -2,6 +2,18 @@
 pragma solidity ^0.8.12;
 
 contract AGYSODaoVoteValidator {
+
+    mapping(address => bytes) public encVotes;
+
+    function setVotes(bytes memory encVote) public {
+        encVotes[msg.sender] = encVote;
+    }
+
+    function getVotes(address addr) public view returns (bytes memory) {
+        return encVotes[addr];
+    }
+
+
     address public alignedServiceManager;
     address public paymentServiceAddr;
 
@@ -44,7 +56,20 @@ contract AGYSODaoVoteValidator {
 
         require(isVerified, "on chain verification failed");
 
+        parseAndSetVote(pubInputBytes, 1240, 1240 + 16*64);
+
         emit ProofValidation(isVerified);
+    }
+
+    function parseAndSetVote(bytes memory pubInput, uint256 start, uint256 end) public {
+
+        bytes memory result = new bytes(end - start);
+
+        for (uint256 i = start; i < end; i++) {
+            result[i - start] = pubInput[i];
+        }
+        
+        setVotes(result);
     }
 
     // function bytesToTwoUint32(bytes memory data) public pure returns (uint32, uint32) {
