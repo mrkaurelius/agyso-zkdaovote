@@ -1,14 +1,11 @@
 package main
 
 import (
-	"flag"
-
 	_ "github.com/consensys/gnark/frontend/cs/r1cs"
 	"github.com/mrkaurelius/ppp-daovote/zk/zk"
 )
 
 func main() {
-	flag.Parse()
 
 	zk.SetupCircuit()
 

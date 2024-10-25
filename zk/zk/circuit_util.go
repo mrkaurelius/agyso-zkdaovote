@@ -125,6 +125,13 @@ func GenerateProof(power, vote0, vote1, vote2, vote3 int, pubKeyX, pubKeyY, encB
 	addEncVotes := CreateVotes(votes, randoms, pub)
 	newEncVotes := AddVotes(bcEncVotes, addEncVotes)
 
+	for i := 0; i < COUNT; i++ {
+		println(bcEncVotes.ElGamals[i].Left.X.String())
+		println(bcEncVotes.ElGamals[i].Left.Y.String())
+		println(bcEncVotes.ElGamals[i].Right.X.String())
+		println(bcEncVotes.ElGamals[i].Right.Y.String())
+	}
+
 	ccs := GetCCSPlonk()
 	pk := GetPKPlonk()
 	vk := GetVKPlonk()

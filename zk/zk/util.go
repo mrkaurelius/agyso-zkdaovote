@@ -26,6 +26,7 @@ func StringToPointUncompress(strX, strY string) *bn254.PointAffine {
 
 	arrayX, _ := hex.DecodeString(strX)
 	arrayY, _ := hex.DecodeString(strY)
+
 	x := new(fr.Element).SetBytes(arrayX)
 	y := new(fr.Element).SetBytes(arrayY)
 	pub := new(bn254.PointAffine)

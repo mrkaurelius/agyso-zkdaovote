@@ -2,7 +2,6 @@ package zk
 
 import (
 	"bytes"
-	"crypto/rand"
 	"encoding/hex"
 	"fmt"
 	"math/big"
@@ -17,10 +16,10 @@ import (
 
 func TestPlonkCircuit(t *testing.T) {
 	//create pair
-	priv, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
-	fmt.Printf("priv.String(): %v\n", priv.String())
-	// priv := new(big.Int).SetInt64(100)
+	priv := new(big.Int).SetInt64(100)
 	pub := new(bn254.PointAffine).ScalarMultiplication(&Base, priv)
+	// priv := new(big.Int).SetInt64(100)
+
 	pubArray := pub.Bytes()
 	pubStr := hex.EncodeToString(pubArray[:])
 
@@ -36,12 +35,20 @@ func TestPlonkCircuit(t *testing.T) {
 	randoms := []*big.Int{new(big.Int).SetInt64(1111), new(big.Int).SetInt64(1111), new(big.Int).SetInt64(1111), new(big.Int).SetInt64(1111)}
 	currentEncVotes := CreateVotes(votes, randoms, pub)
 
+	currentEncVotes = StringToVotesSolidity("248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa80f94cbffa2a1b4571ea97160b0dc21c70f3beaab10265e3655ae6dd795f3f7df0aecb8871b679eb5e1500874931d1ac13ac652c684f1ea94b80ad3c8a0adc1be248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa80f94cbffa2a1b4571ea97160b0dc21c70f3beaab10265e3655ae6dd795f3f7df0aecb8871b679eb5e1500874931d1ac13ac652c684f1ea94b80ad3c8a0adc1be248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa80f94cbffa2a1b4571ea97160b0dc21c70f3beaab10265e3655ae6dd795f3f7df0aecb8871b679eb5e1500874931d1ac13ac652c684f1ea94b80ad3c8a0adc1be248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa80f94cbffa2a1b4571ea97160b0dc21c70f3beaab10265e3655ae6dd795f3f7df0aecb8871b679eb5e1500874931d1ac13ac652c684f1ea94b80ad3c8a0adc1be")
 	// println("pub.X.String(): \n", pub.X.String())
 	// println("pub.Y.String(): \n", pub.Y.String())
 	// println("currentEncVotes.ElGamals[0].Left.X.String(): \n", currentEncVotes.ElGamals[0].Left.X.String())
 	// println("currentEncVotes.ElGamals[0].Left.Y.String(): \n", currentEncVotes.ElGamals[0].Left.Y.String())
 	// println("currentEncVotes.ElGamals[0].Right.X.String(): \n", currentEncVotes.ElGamals[0].Right.X.String())
 	// println("currentEncVotes.ElGamals[0].Right.Y.String(): \n", currentEncVotes.ElGamals[0].Right.Y.String())
+
+	for i := 0; i < COUNT; i++ {
+		println(currentEncVotes.ElGamals[i].Left.X.String())
+		println(currentEncVotes.ElGamals[i].Left.Y.String())
+		println(currentEncVotes.ElGamals[i].Right.X.String())
+		println(currentEncVotes.ElGamals[i].Right.Y.String())
+	}
 
 	// create add Votes
 	addVotes := []*big.Int{new(big.Int).SetInt64(1), new(big.Int).SetInt64(2), new(big.Int).SetInt64(3), new(big.Int).SetInt64(4)}
@@ -162,6 +169,9 @@ func TestPlonkCircuit(t *testing.T) {
 }
 
 func TestStringToVotesSolidity(t *testing.T) {
+	priv := new(big.Int).SetInt64(100)
+	pub := new(bn254.PointAffine).ScalarMultiplication(&Base, priv)
+	print(pub.X.String())
 
 }
 
@@ -170,26 +180,10 @@ func TestZero(t *testing.T) {
 	priv := new(big.Int).SetInt64(100)
 	pub := new(bn254.PointAffine).ScalarMultiplication(&Base, priv)
 
-	message := new(big.Int).SetInt64(0)
-	messages := []*big.Int{message, message, message, message}
-	rand0, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
-	rand1, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
-	rand2, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
-	rand3, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
-	randoms := []*big.Int{rand0, rand1, rand2, rand3}
+	pubXArray := pub.X.Bytes()
+	pubYArray := pub.Y.Bytes()
 
-	votes := CreateVotes(messages, randoms, pub)
-
-	left0x := votes.ElGamals[0].Left.X.Bytes()
-	left0y := votes.ElGamals[0].Left.Y.Bytes()
-	right0x := votes.ElGamals[0].Right.X.Bytes()
-	right0y := votes.ElGamals[0].Right.Y.Bytes()
-	str := hex.EncodeToString(left0x[:]) + hex.EncodeToString(left0y[:]) + hex.EncodeToString(right0x[:]) + hex.EncodeToString(right0y[:])
-
-	fmt.Printf("str: %v\n", str)
-
-	err := GenerateProof(5, 4, 0, 0, 1, pub.X.String(),
-		pub.Y.String(), "248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa820dd4822ccb893a28899c53e91717ecd36ef14d6667216dc8e4092092a1abf0415c1086baaaea302fd549cc03e207fd66aa0cc38c9b67670e91d083192e4aa67248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa820dd4822ccb893a28899c53e91717ecd36ef14d6667216dc8e4092092a1abf0415c1086baaaea302fd549cc03e207fd66aa0cc38c9b67670e91d083192e4aa67248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa820dd4822ccb893a28899c53e91717ecd36ef14d6667216dc8e4092092a1abf0415c1086baaaea302fd549cc03e207fd66aa0cc38c9b67670e91d083192e4aa67248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa820dd4822ccb893a28899c53e91717ecd36ef14d6667216dc8e4092092a1abf0415c1086baaaea302fd549cc03e207fd66aa0cc38c9b67670e91d083192e4aa67")
+	err := GenerateProof(10, 1, 2, 3, 4, hex.EncodeToString(pubXArray[:]), hex.EncodeToString(pubYArray[:]), "248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa80f94cbffa2a1b4571ea97160b0dc21c70f3beaab10265e3655ae6dd795f3f7df0aecb8871b679eb5e1500874931d1ac13ac652c684f1ea94b80ad3c8a0adc1be248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa80f94cbffa2a1b4571ea97160b0dc21c70f3beaab10265e3655ae6dd795f3f7df0aecb8871b679eb5e1500874931d1ac13ac652c684f1ea94b80ad3c8a0adc1be248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa80f94cbffa2a1b4571ea97160b0dc21c70f3beaab10265e3655ae6dd795f3f7df0aecb8871b679eb5e1500874931d1ac13ac652c684f1ea94b80ad3c8a0adc1be248f64260528cc106604cca088a01ac1aa92783dd2bf131f3ab28025a95e5ea91d225d2c97bdb6b7701d78d8ef08e05acecda1e7e2ff88d6bdf69b2cfe7f2fa80f94cbffa2a1b4571ea97160b0dc21c70f3beaab10265e3655ae6dd795f3f7df0aecb8871b679eb5e1500874931d1ac13ac652c684f1ea94b80ad3c8a0adc1be")
 
 	fmt.Printf("err: %v\n", err)
 
