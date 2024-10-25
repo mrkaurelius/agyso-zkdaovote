@@ -5,15 +5,27 @@ Privacy preserving dao voting using aligned network and PLONK proofs.
 Deployed Network: Ethereum Holesky.
 Deployed Contract: TODO
 
+## Run agyso-daovote
+
+TODO how to run
+
+Tested on Debian 11, Ubuntu 22, go1.23, rust 1.82.0
+
 ## Directories
 
-TODO
+TODO 
 
 ## TODO 
 
 - ~~Submit proof using own address~~
-- On chain zk proof verification
-- generate json in daovote-rs and put to proper place for aligned.ts usage
+- ~~On chain zk proof verification~~
+- ~~generate json in daovote-rs and put to proper place for aligned.ts usage~~
+- ~~zkservice~~
+- Architecture diagram
+
+## Deployments
+
+Smartcontract: TODO
 
 ## Aligned Docs
 

@@ -1,8 +1,8 @@
-backend:
-	go build -o build/daovote-server cmd/daovote-service/main.go
+service:
+	go run ./cmd/daovote-zk-service
 
-proof:
-	go test -v ./gnark
+cli:
+	go run ./cmd/daovote-zk-cli
 
-webasm:
-	GOOS=js GOARCH=wasm go build -o build/daovote.wasm cmd/daovote-wasm/main.go
+test:
+	go test -v -count=1 ./zk
