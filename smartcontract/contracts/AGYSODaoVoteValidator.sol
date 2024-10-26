@@ -3,7 +3,11 @@ pragma solidity ^0.8.12;
 
 contract AGYSODaoVoteValidator {
 
+    address public constant PROPOSER_ADD = 0xbb9aE6C54376DEe7a3e41BCeFEAb456866ab25a7;
+ 
+
     mapping(address => bytes) public encVotes;
+    
 
     address public alignedServiceManager;
     address public paymentServiceAddr;
@@ -15,13 +19,21 @@ contract AGYSODaoVoteValidator {
         paymentServiceAddr = _paymentServiceAddr;
     }
 
-    function setVotes(bytes memory encVote) public {
-        encVotes[msg.sender] = encVote;
+
+
+    function setVotes(bytes memory encVote)  {
+        encVotes[PROPOSER_ADD] = encVote;
     }
 
-    function getVotes(address addr) public view returns (bytes memory) {
-        return encVotes[addr];
+    function getVotes() public view returns (bytes memory) {
+        return encVotes[PROPOSER_ADD];
     }
+
+    function finishElection() public  {
+        require(msg.sender == PROPOSER_ADD)
+        setVotes(bytes(""));
+    }
+
 
 
     function verifyBatchInclusion(
@@ -72,19 +84,5 @@ contract AGYSODaoVoteValidator {
         setVotes(result);
     }
 
-    // function bytesToTwoUint32(bytes memory data) public pure returns (uint32, uint32) {
-    //     require(data.length >= 8, "Input bytes must be at least 8 bytes long");
 
-    //     uint32 first = uint32(uint8(data[0])) |
-    //         (uint32(uint8(data[1])) << 8) |
-    //         (uint32(uint8(data[2])) << 16) |
-    //         (uint32(uint8(data[3])) << 24);
-
-    //     uint32 second = uint32(uint8(data[4])) |
-    //         (uint32(uint8(data[5])) << 8) |
-    //         (uint32(uint8(data[6])) << 16) |
-    //         (uint32(uint8(data[7])) << 24);
-
-    //     return (first, second);
-    // }
 }
