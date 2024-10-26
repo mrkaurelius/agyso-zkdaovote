@@ -13,6 +13,11 @@ interface CallData {
   index_in_batch: number;
 }
 
+// TODO wait on transaction
+
+// 0x3fb7950daC347a4C80081a1fB2E9D50e17CB255f
+const contractAddress = "0x7690854F34f7EFDe10030761eAeB51d6D83207C8";
+
 const getBalance = async (hre: HardhatRuntimeEnvironment) => {
   const ethers = hre.ethers;
 
@@ -23,19 +28,15 @@ const getBalance = async (hre: HardhatRuntimeEnvironment) => {
   console.log(balance);
 };
 
-const onChainVerify = async (hre: HardhatRuntimeEnvironment) => {
+const castZKVote = async (hre: HardhatRuntimeEnvironment) => {
   const ethers = hre.ethers;
-
   const signer = (await ethers.getSigners())[0];
-
-  const contractAddress = "0xa3656Ea3B745cEE21D2E761F222fb3eb08387342";
-
   const contract = await hre.ethers.getContractAt("AGYSODaoVoteValidator", contractAddress, signer);
 
   const jsonData = readFileSync("/var/tmp/agyso-daovote/proof/plonk/calldata.json", "utf-8");
   const callData: CallData = JSON.parse(jsonData);
 
-  const contractResp = await contract.verifyBatchInclusion(
+  const contractResp = await contract.castZKVote(
     callData.proof_commitment_hex,
     callData.public_input_commitment_hex,
     callData.proving_system_aux_data_commitment_hex,
@@ -46,18 +47,45 @@ const onChainVerify = async (hre: HardhatRuntimeEnvironment) => {
     callData.pub_input_hex
   );
 
+  const receipt = await contractResp.wait(1);
+  console.log(receipt);
+};
+
+const getBallotBox = async (hre: HardhatRuntimeEnvironment) => {
+  const ethers = hre.ethers;
+  const signer = (await ethers.getSigners())[0];
+  const contract = await hre.ethers.getContractAt("AGYSODaoVoteValidator", contractAddress, signer);
+
+  const contractResp = await contract.getBallotBox();
   console.log(contractResp);
+};
+
+const finishElection = async (hre: HardhatRuntimeEnvironment) => {
+  const ethers = hre.ethers;
+  const proposerSigner = (await ethers.getSigners())[1];
+  const contract = await hre.ethers.getContractAt("AGYSODaoVoteValidator", contractAddress, proposerSigner);
+
+  const contractResp = await contract.finishElection();
+
+  const receipt = await contractResp.wait(1);
+  console.log(receipt);
 };
 
 const createAccount = async (hre: HardhatRuntimeEnvironment) => {
   const wallet = hre.ethers.Wallet.createRandom();
-  console.log(`address: ${wallet.address}\nprivate key: ${wallet.privateKey}`)
-  
-}
+  console.log(`address: ${wallet.address}\nprivate key: ${wallet.privateKey}`);
+};
 
 const aligned = async (args: any, hre: HardhatRuntimeEnvironment) => {
   // await createAccount(hre);
-  await onChainVerify(hre);
+
+  // await finishElection(hre);
+
+  await getBallotBox(hre);
+  await castZKVote(hre);
+  await getBallotBox(hre);
+  // await finishElection(hre);
+  // await getBallotBox(hre);
 };
 
 export { aligned };

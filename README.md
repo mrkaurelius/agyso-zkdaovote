@@ -51,6 +51,7 @@ type CircuitMain struct {
 	EncVoteNew   VotesCircuit `gnark:",public"`
 }
  ```
+
 * **VoteWeight** represents vote power.
 * **MasterPubKey** represents encryption public key.
 * **Vote** 
@@ -58,8 +59,6 @@ represents votes.
 * **Randoms** represents randoms used in encryption.
 * **EncVoteOld**  represents the encrypted votes to be exchanged in the chain.
 * **EncVoteNew**  represents new encrypted votes added to EncVoteOld.
-
-
 
 ## Deployments
 

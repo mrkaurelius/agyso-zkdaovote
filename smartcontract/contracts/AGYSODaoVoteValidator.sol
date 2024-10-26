@@ -1,42 +1,36 @@
-// SPDX-License-Identifier: GPL-3.0	
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.12;
 
 contract AGYSODaoVoteValidator {
+    address public constant PROPOSER_ADDRESS = 0xbb9aE6C54376DEe7a3e41BCeFEAb456866ab25a7;
 
-    address public constant PROPOSER_ADD = 0xbb9aE6C54376DEe7a3e41BCeFEAb456866ab25a7;
- 
-
-    mapping(address => bytes) public encVotes;
-    
+    mapping(address => bytes) public encBallots;
 
     address public alignedServiceManager;
     address public paymentServiceAddr;
 
-    event ProofValidation(bool verified);
+    event Proof(bool verified);
+    event BallotBox(address voter, bytes32 proofCommitment);
 
     constructor(address _alignedServiceManager, address _paymentServiceAddr) {
         alignedServiceManager = _alignedServiceManager;
         paymentServiceAddr = _paymentServiceAddr;
     }
 
-
-
-    function setVotes(bytes memory encVote)  {
-        encVotes[PROPOSER_ADD] = encVote;
+    function setBallotBox(bytes memory encVotes) private {
+        encBallots[PROPOSER_ADDRESS] = encVotes;
     }
 
-    function getVotes() public view returns (bytes memory) {
-        return encVotes[PROPOSER_ADD];
+    function getBallotBox() public view returns (bytes memory) {
+        return encBallots[PROPOSER_ADDRESS];
     }
 
-    function finishElection() public  {
-        require(msg.sender == PROPOSER_ADD)
-        setVotes(bytes(""));
+    function finishElection() public {
+        require(msg.sender == PROPOSER_ADDRESS);
+        setBallotBox(bytes(""));
     }
 
-
-
-    function verifyBatchInclusion(
+    function castZKVote(
         bytes32 proofCommitment,
         bytes32 pubInputCommitment,
         bytes32 provingSystemAuxDataCommitment,
@@ -46,7 +40,7 @@ contract AGYSODaoVoteValidator {
         uint256 verificationDataBatchIndex,
         bytes memory pubInputBytes
     ) public {
-        require(pubInputCommitment == keccak256(abi.encodePacked(pubInputBytes)), "public input enayiligi");
+        require(pubInputCommitment == keccak256(abi.encodePacked(pubInputBytes)), "pubinp comm. don't match");
 
         (bool callWasSuccessful, bytes memory proofIsIncluded) = alignedServiceManager.staticcall(
             abi.encodeWithSignature(
@@ -65,24 +59,22 @@ contract AGYSODaoVoteValidator {
         require(callWasSuccessful, "static_call failed");
 
         bool isVerified = abi.decode(proofIsIncluded, (bool));
-
         require(isVerified, "on chain verification failed");
 
-        parseAndSetVote(pubInputBytes, 1240, 1240 + 16*64);
+        parseAndSetBallots(pubInputBytes, 1240 / 2, (1240 + 16 * 64) / 2);
 
-        emit ProofValidation(isVerified);
+        emit Proof(isVerified);
+        emit BallotBox(msg.sender, proofCommitment);
     }
 
-    function parseAndSetVote(bytes memory pubInput, uint256 start, uint256 end) public {
+    function parseAndSetBallots(bytes memory publicInput, uint256 start, uint256 end) public {
+        bytes memory encVotes = new bytes(512);
 
-        bytes memory result = new bytes(end - start);
-
+        uint j = 0;
         for (uint256 i = start; i < end; i++) {
-            result[i - start] = pubInput[i];
+            encVotes[j++] = publicInput[i];
         }
-        
-        setVotes(result);
+
+        setBallotBox(encVotes);
     }
-
-
 }
