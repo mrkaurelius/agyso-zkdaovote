@@ -172,7 +172,6 @@ func TestStringToVotesSolidity(t *testing.T) {
 	priv := new(big.Int).SetInt64(100)
 	pub := new(bn254.PointAffine).ScalarMultiplication(&Base, priv)
 	print(pub.X.String())
-
 }
 
 func TestZero(t *testing.T) {
