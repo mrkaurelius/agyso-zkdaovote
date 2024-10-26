@@ -20,7 +20,6 @@ use ethers::utils::hex::{self};
 use serde::{Deserialize, Serialize};
 
 const BATCHER_URL: &str = "wss://batcher.alignedlayer.com";
-// const RPC_URL: &str = "https://ethereum-holesky-rpc.publicnode.com";
 const RPC_URL: &str = "https://ethereum-holesky-rpc.publicnode.com";
 
 const PROOF_FILE_PATH: &str = "/var/tmp/agyso-daovote/proof/plonk/plonk.proof";
@@ -46,7 +45,9 @@ struct CallDataParams {
 async fn main() -> Result<(), SubmitError> {
     env_logger::Builder::from_env(Env::default().default_filter_or("debug")).init();
 
-    let wallet = LocalWallet::decrypt_keystore("../../vault/agyso-aligned", "")
+    let keystore_path = "/var/tmp/agyso-daovote/vault/agyso-aligned";
+    let keystore_passwd = "";
+    let wallet = LocalWallet::decrypt_keystore(keystore_path, keystore_passwd)
         .expect("Failed to decrypt keystore")
         .with_chain_id(17000u64);
 
@@ -149,10 +150,15 @@ async fn main() -> Result<(), SubmitError> {
     let index_in_batch = verification_data.index_in_batch as u64;
     info!("index_in_batch_hex: {}", index_in_batch);
 
-    info!(
+    println!(
         "https://explorer.alignedlayer.com/batches/0x{}",
         hex::encode(verification_data.batch_merkle_root)
     );
+
+    // info!(
+    //     "https://explorer.alignedlayer.com/batches/0x{}",
+    //     hex::encode(verification_data.batch_merkle_root)
+    // );
 
     let json_obj = CallDataParams {
         pub_input_hex,

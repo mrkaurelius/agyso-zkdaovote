@@ -14,7 +14,6 @@ Tested with Debian 11, Ubuntu 22, go1.23, rust 1.82.0
 0. `git clone --recursive https://github.com/mrkaurelius/agyso-zkdaovote`
 1. Copy `vault` to `/var/tmp/agyso-daovote/vault`
 2. Build `sdk/daovote-rs` and add to PATH
-   1. `daovote-rs` need aligned
 3. Initialise circuit and protocol with `cd ./zk && make cli`
 4. Start `zk/cmd/daovote-zk-service` service which generates proof and submit proofs to aligned layer
 5. Start dapp frontend with `cd ./app && npm run`
