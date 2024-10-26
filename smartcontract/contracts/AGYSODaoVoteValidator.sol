@@ -1,18 +1,9 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: GPL-3.0	
 pragma solidity ^0.8.12;
 
 contract AGYSODaoVoteValidator {
 
     mapping(address => bytes) public encVotes;
-
-    function setVotes(bytes memory encVote) public {
-        encVotes[msg.sender] = encVote;
-    }
-
-    function getVotes(address addr) public view returns (bytes memory) {
-        return encVotes[addr];
-    }
-
 
     address public alignedServiceManager;
     address public paymentServiceAddr;
@@ -23,6 +14,15 @@ contract AGYSODaoVoteValidator {
         alignedServiceManager = _alignedServiceManager;
         paymentServiceAddr = _paymentServiceAddr;
     }
+
+    function setVotes(bytes memory encVote) public {
+        encVotes[msg.sender] = encVote;
+    }
+
+    function getVotes(address addr) public view returns (bytes memory) {
+        return encVotes[addr];
+    }
+
 
     function verifyBatchInclusion(
         bytes32 proofCommitment,

@@ -49,7 +49,14 @@ const onChainVerify = async (hre: HardhatRuntimeEnvironment) => {
   console.log(contractResp);
 };
 
+const createAccount = async (hre: HardhatRuntimeEnvironment) => {
+  const wallet = hre.ethers.Wallet.createRandom();
+  console.log(`address: ${wallet.address}\nprivate key: ${wallet.privateKey}`)
+  
+}
+
 const aligned = async (args: any, hre: HardhatRuntimeEnvironment) => {
+  // await createAccount(hre);
   await onChainVerify(hre);
 };
 
