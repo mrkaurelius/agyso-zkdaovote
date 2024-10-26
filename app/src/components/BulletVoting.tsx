@@ -37,8 +37,8 @@ function BulletVoting() {
     <Box margin="12">
       <Center>
         <VStack>
-          <HStack spacing="24px">
-            <Card boxShadow="xl">
+          <HStack spacing="48px">
+            <Card boxShadow="xl" bg="whiteAlpha.600">
               <CardBody>
                 <Image src={scar} borderRadius="lg" />
               </CardBody>
@@ -67,7 +67,7 @@ function BulletVoting() {
               </Center>
             </Card>
 
-            <Card boxShadow="xl">
+            <Card boxShadow="xl" bg="whiteAlpha.600">
               <CardBody>
                 <Image src={scar} borderRadius="lg" />
               </CardBody>
@@ -96,7 +96,7 @@ function BulletVoting() {
               </Center>
             </Card>
 
-            <Card boxShadow="xl">
+            <Card boxShadow="xl" bg="whiteAlpha.600">
               <CardBody>
                 <Image src={scar} borderRadius="lg" />
               </CardBody>
@@ -125,7 +125,7 @@ function BulletVoting() {
               </Center>
             </Card>
 
-            <Card boxShadow="xl">
+            <Card boxShadow="xl" bg="whiteAlpha.600">
               <CardBody>
                 <Image src={scar} borderRadius="lg" />
               </CardBody>

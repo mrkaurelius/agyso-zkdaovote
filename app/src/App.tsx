@@ -1,7 +1,10 @@
 import { useEffect } from "react";
-import { Box } from "@chakra-ui/react";
-import ConnectWallet from "./components/ConnectWallet";
+import { Grid, GridItem } from "@chakra-ui/react";
 import BulletVoting from "./components/BulletVoting";
+import Navbar from "./components/Navbar";
+import Menu from "./components/Menu";
+import Wallet from "./components/Navbar";
+
 const go = new Go();
 function App() {
   useEffect(() => {
@@ -13,12 +16,25 @@ function App() {
   });
 
   return (
-    <Box>
-      <ConnectWallet></ConnectWallet>
-      <Box>
+    <Grid
+      templateAreas={`
+      "nav header"
+      "nav main"
+      `}
+      gridTemplateRows={"auto auto"}
+      gridTemplateColumns={"250px auto"}
+      bgGradient="linear-gradient(120deg, #a6c0fe 0%, #f68084 100%)"
+      w="100vw"
+      h="100vh"
+      color="blackAlpha.700"
+      fontWeight="bold"
+    >
+      <Wallet></Wallet>
+      <Menu></Menu>
+      <GridItem area={"main"}>
         <BulletVoting></BulletVoting>
-      </Box>
-    </Box>
+      </GridItem>
+    </Grid>
   );
 }
 
