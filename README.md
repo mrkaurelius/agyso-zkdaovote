@@ -2,6 +2,44 @@
 
 Privacy preserving DAO voting using aligned network and PLONK proofs.
 
+## Protocol
+
+TL;DR
+A blockchain-based voting system designed to preserve voter privacy and ensure accurate vote weighting based on each participant’s token balance (vote power). The system achieves confidentiality by storing encrypted votes on-chain, leveraging homomorphic encryption for private vote aggregation, and using zero-knowledge proofs (ZKPs) for verification. 
+
+### Homomorphic ElGamal Encryption
+In Protocol, all ciphertexts proceed on ElGamal Homomorphic Encryption. First, the person who initiates the vote generates a private-public key pair and shares the public key. Voters then cast their votes using this public key. Votes are collected by homomorphic addition and decrypted when the voting process is finished. 
+The ElGamal encryption implementation outside and inside the circuit is available in the  `zk/zk` folder. Reduced form of Twisted Edwards]of [BN254](https://iden3-docs.readthedocs.io/en/latest/_downloads/33717d75ab84e11313cc0d8a090b636f/Baby-Jubjub.pdf) was used as the elliptic curve.
+
+Assume $(x, Y) = (x,\hspace{0.1in} x\cdot G)$ is a private-public key pair. The encryption and decryption as follows:
+
+$$ Enc(m,Y) = (C_1, \hspace{0.1in} C_2) = (r \cdot  G, \hspace{0.1in} m \cdot G + r \cdot Y ) $$
+
+$$ Dec(C_1,C_2, x ) = (C_2 - x \cdot C_1) = (m \cdot G)$$
+
+After brute-force (or [using Shanks Algorithm](https://www.mat.uniroma2.it/~geatti/HCMC2023/Lecture4.pdf)) we can get message m. 
+
+Let's say there is another encryption with $Y$
+
+$$ Enc(m',Y) = (C'_1, \hspace{0.1in} C'_2) = (r' \cdot  G, \hspace{0.1in} m' \cdot G + r' \cdot Y ) $$
+
+We can add these two encryptions.
+
+$$ (C_1, \hspace{0.1in} C_2)+ (C'_1, \hspace{0.1in} C'_2) = [(r' + r) \cdot  G, \hspace{0.1in} (m'+m) \cdot G + (r' +r) \cdot Y ] $$
+
+
+Then, by decrypting it, we obtain the sum of the two plaintexts $m' + m$.
+
+
+### Zero-Knowledge Proof (ZKP)
+
+Plonk on BN254 was used in the project. Since the protocol is based on encrypted votes, it must be proven that the encrypted votes are created properly. ZKP verify the following:
+
+1. **Vote Power Validation**: ZKP confirms the encrypted votes accurately represents the voter’s token-based power (No more votes were given than token power) .
+2. **Non-Negative Vote Check**: ZKP ensures no negative values are encrypted.
+3. **Homomorphic Summation Correctness**: ZKP confirms that homomorphic encryption and summation were correctly applied, enabling accurate aggregation without revealing individual votes.
+ 
+
 ## Deployments
 
 Network: Ethereum Holesky.
