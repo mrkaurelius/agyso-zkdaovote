@@ -62,3 +62,36 @@ func AddVotes(oldVotes, addVotes *Votes) *Votes {
 
 	return newVotes
 }
+
+func DecryptEncryptedBulletsFromStr(str string, sec *big.Int) []int {
+	votes := StringToVotesSolidity(str)
+
+	return DecryptEncryptedBulletsFrom(votes, sec)
+
+}
+
+func DecryptEncryptedBulletsFrom(bullets *Votes, sec *big.Int) []int {
+	decVote := make([]int, 4)
+	for i := 0; i < 4; i++ {
+		decVote[i] = DecryptElgamalBrute(bullets.ElGamals[i], sec)
+	}
+
+	return decVote
+}
+
+// (c1,c2) = (g^r, g^m*pk^r)
+func DecryptElgamalBrute(enc *ElGamal, sec *big.Int) int {
+
+	dec := new(bn254.PointAffine).Add(
+		enc.Right,
+		new(bn254.PointAffine).ScalarMultiplication(enc.Left, new(big.Int).Neg(sec)))
+
+	//TODO
+	for i := 0; i < 1000; i++ {
+		if new(bn254.PointAffine).ScalarMultiplication(&Base, big.NewInt(int64(i))).X.Equal(&dec.X) {
+			return int(i)
+		}
+	}
+
+	return 0
+}
