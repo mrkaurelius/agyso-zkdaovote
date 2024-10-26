@@ -2,7 +2,7 @@ package main
 
 import (
 	_ "github.com/consensys/gnark/frontend/cs/r1cs"
-	"github.com/mrkaurelius/ppp-daovote/zk/zk"
+	"github.com/mrkaurelius/agyso-zkdaovote/zk/zk"
 )
 
 func main() {

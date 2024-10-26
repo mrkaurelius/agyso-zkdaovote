@@ -3,6 +3,7 @@ package zk
 import (
 	"bytes"
 	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"os"
 	"path/filepath"
@@ -36,10 +37,13 @@ func SetupCircuit() {
 	privateKey := priv.String()
 
 	pub := new(bn254.PointAffine).ScalarMultiplication(&Base, priv)
-	pubX := pub.X.String()
-	pubY := pub.Y.String()
+	pubXArr := pub.X.Bytes()
+	pubYArr := pub.Y.Bytes()
 
-	keyData := KeyData{PrivateKey: privateKey, PublicKeyX: pubX, PublicKeyY: pubY}
+	pubXEncoded := hex.EncodeToString(pubXArr[:])
+	pubYEncoded := hex.EncodeToString(pubYArr[:])
+
+	keyData := KeyData{PrivateKey: privateKey, PublicKeyX: pubXEncoded, PublicKeyY: pubYEncoded}
 
 	keyDataBytes, err := json.Marshal(keyData)
 	if err != nil {

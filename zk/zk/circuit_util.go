@@ -3,7 +3,9 @@ package zk
 import (
 	"crypto/rand"
 	"errors"
+	"fmt"
 	"math/big"
+	"os"
 	"strings"
 
 	"github.com/consensys/gnark-crypto/ecc"
@@ -23,6 +25,7 @@ type CircuitMain struct {
 }
 
 const COUNT = 4
+const proofBasePath = "/var/tmp/agyso-daovote/proof/plonk"
 
 type ElGamalCircuit struct {
 	Left  twistededwards.Point
@@ -99,6 +102,7 @@ func (circuit *CircuitMain) Define(api frontend.API) error {
 	return nil
 }
 
+// Important
 func GenerateProof(power, vote0, vote1, vote2, vote3 int, pubKeyX, pubKeyY, encBCVote string) error {
 
 	bcEncVotes := new(Votes)
@@ -170,10 +174,57 @@ func GenerateProof(power, vote0, vote1, vote2, vote3 int, pubKeyX, pubKeyY, encB
 		return err
 	}
 
-	result := plonk.Verify(proof, vk, publicWitness)
-	if result == nil {
-		return nil
-	} else {
-		return errors.New("proof verification error")
+	err = plonk.Verify(proof, vk, publicWitness)
+	if err != nil {
+		return err
 	}
+
+	err = os.MkdirAll(proofBasePath, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+
+	proofPath := fmt.Sprintf("%s/plonk.proof", proofBasePath)
+	proofFile, err := os.Create(proofPath)
+	if err != nil {
+		fmt.Println("hehe")
+		return err
+	}
+
+	vkFilePath := fmt.Sprintf("%s/plonk.vk", proofBasePath)
+	vkFile, err := os.Create(vkFilePath)
+	if err != nil {
+		return err
+	}
+
+	witnessFilePath := fmt.Sprintf("%s/plonk_pub_input.pub", proofBasePath)
+	witnessFile, err := os.Create(witnessFilePath)
+	if err != nil {
+		return err
+	}
+
+	defer proofFile.Close()
+	defer vkFile.Close()
+	defer witnessFile.Close()
+
+	_, err = proof.WriteTo(proofFile)
+	if err != nil {
+		return errors.New("could not serialize proof into file")
+	}
+	_, err = vk.WriteTo(vkFile)
+	if err != nil {
+		return errors.New("could not serialize verification key into file")
+	}
+	_, err = publicWitness.WriteTo(witnessFile)
+	if err != nil {
+		return errors.New("could not serialize proof into file")
+	}
+
+	fmt.Printf("proof written into %s\n", proofPath)
+	fmt.Printf("verification key into %s\n", vkFilePath)
+	fmt.Printf("public witness written into %s\n", witnessFilePath)
+
+	fmt.Printf("Proof verification succeeded")
+
+	return nil
 }

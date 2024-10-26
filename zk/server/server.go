@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/mrkaurelius/ppp-daovote/zk/zk"
+	"github.com/mrkaurelius/agyso-zkdaovote/zk/zk"
 )
 
 type ProofRequest struct {
@@ -19,7 +19,7 @@ type ProofRequest struct {
 	Vote3            int    `json:"vote3"`
 }
 
-func ProofRequestHandler(c *gin.Context) {
+func GenerateProofHandler(c *gin.Context) {
 	var pr ProofRequest
 
 	if err := c.ShouldBindJSON(&pr); err != nil {
@@ -29,11 +29,34 @@ func ProofRequestHandler(c *gin.Context) {
 
 	fmt.Printf("%+v\n", pr)
 
-	zk.GenerateProof(pr.VotePower, pr.Vote0, pr.Vote1, pr.Vote2, pr.Vote3, pr.PublicKeyX, pr.PublicKeyY, pr.EncryptedBullets)
+	err := zk.GenerateProof(pr.VotePower, pr.Vote0, pr.Vote1, pr.Vote2, pr.Vote3, pr.PublicKeyX, pr.PublicKeyY, pr.EncryptedBullets)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
+		return
+	}
 
-	// TODO senior applied cryptographer with 10 cite (emeritus uekae, defi talent, cbdc, academician) msc. ali bey yapacak
+	c.JSON(http.StatusOK, gin.H{"status": "ok", "message": "proof generated"})
+}
 
-	c.String(http.StatusOK, "OK")
+func SubmitProofHandler(c *gin.Context) {
+
+	calldata, err := zk.ExecAgysoDaoVoteRs()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "ok", "message": "proof submitted to aligned and verified", "calldata": calldata})
+}
+
+func GetCallDataHandler(c *gin.Context) {
+	calldata, err := zk.GetCallData()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "ok", "calldata": calldata})
 }
 
 func DecryptHandler(c *gin.Context) {
@@ -41,7 +64,7 @@ func DecryptHandler(c *gin.Context) {
 	c.String(http.StatusOK, "OK")
 }
 
-func ElectionHandler(c *gin.Context) {
+func ElectionInitHandler(c *gin.Context) {
 
 	c.String(http.StatusOK, "OK")
 }

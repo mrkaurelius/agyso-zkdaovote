@@ -1,8 +1,8 @@
 service:
-	go run ./cmd/daovote-zk-service
+	go run ./cmd/zkdaovote-service
 
 cli:
-	go run ./cmd/daovote-zk-cli
+	go run ./cmd/zkdaovote-cli
 
 test:
 	go test -v -count=1 ./zk

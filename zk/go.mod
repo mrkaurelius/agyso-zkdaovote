@@ -1,4 +1,4 @@
-module github.com/mrkaurelius/ppp-daovote/zk
+module github.com/mrkaurelius/agyso-zkdaovote/zk
 
 go 1.23.2
 
