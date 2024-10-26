@@ -38,7 +38,28 @@ Plonk on BN254 was used in the project. Since the protocol is based on encrypted
 1. **Vote Power Validation**: ZKP confirms the encrypted votes accurately represents the voter’s token-based power (No more votes were given than token power) .
 2. **Non-Negative Vote Check**: ZKP ensures no negative values are encrypted.
 3. **Homomorphic Summation Correctness**: ZKP confirms that homomorphic encryption and summation were correctly applied, enabling accurate aggregation without revealing individual votes.
- 
+
+Gnark was used for proof generation and its circuit structure is as follows. (The number of ballots is fixed at 4.)
+
+ ```
+type CircuitMain struct {
+	VoteWeight   frontend.Variable    `gnark:",public"` //
+	MasterPubKey twistededwards.Point `gnark:",public"`
+	Vote         [4]frontend.Variable
+	Randoms      [4]frontend.Variable
+	EncVoteOld   VotesCircuit `gnark:",public"`
+	EncVoteNew   VotesCircuit `gnark:",public"`
+}
+ ```
+* **VoteWeight** represents vote power.
+* **MasterPubKey** represents encryption public key.
+* **Vote** 
+represents votes.
+* **Randoms** represents randoms used in encryption.
+* **EncVoteOld**  represents the encrypted votes to be exchanged in the chain.
+* **EncVoteNew**  represents new encrypted votes added to EncVoteOld.
+
+
 
 ## Deployments
 
