@@ -1,13 +1,18 @@
 package zk
 
 import (
+	"encoding/json"
+	"io"
 	"math/big"
+	"os"
+	"path/filepath"
 
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	bn254 "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards"
 )
 
 var Base = bn254.GetEdwardsCurve().Base
+var electionKey KeyData
 
 type ElGamal struct {
 	Left  *bn254.PointAffine
@@ -16,6 +21,12 @@ type ElGamal struct {
 
 type Votes struct {
 	ElGamals [COUNT]*ElGamal
+}
+
+type KeyData struct {
+	PrivateKey string `json:"privateKey"`
+	PublicKeyX string `json:"publicKeyX"`
+	PublicKeyY string `json:"publicKeyY"`
 }
 
 func NewElGamal(p1, p2 *bn254.PointAffine) *ElGamal {
@@ -61,6 +72,31 @@ func AddVotes(oldVotes, addVotes *Votes) *Votes {
 	}
 
 	return newVotes
+}
+
+func GetElectionKeys() (key *KeyData, err error) {
+
+	keyFile, err := os.Open(filepath.Join(circuitSetupPath, "keyfile.json"))
+	if err != nil {
+		return nil, err
+	}
+	defer keyFile.Close()
+
+	keyFileBytes, err := io.ReadAll(keyFile)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(keyFileBytes, &key); err != nil {
+		return nil, err
+	}
+
+	return key, nil
+}
+
+func DecryptEncryprtedBulletBox(encryped string, secretStr string) []int {
+	secret, _ := new(big.Int).SetString(secretStr, 10)
+	return DecryptEncryptedBulletsFromStr(encryped, secret)
 }
 
 func DecryptEncryptedBulletsFromStr(str string, sec *big.Int) []int {

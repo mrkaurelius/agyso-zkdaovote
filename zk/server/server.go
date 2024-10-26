@@ -10,13 +10,15 @@ import (
 
 type ProofRequest struct {
 	VotePower        int    `json:"votePower"`        // Get vote power from smart contract
-	PublicKeyX       string `json:"publicKeyX"`       // Vote encryptor public key x
-	PublicKeyY       string `json:"publicKeyY"`       // Vote encryptor public key y
 	EncryptedBullets string `json:"encryptedBullets"` // Homomorphic encrypted bullets
 	Vote0            int    `json:"vote0"`
 	Vote1            int    `json:"vote1"`
 	Vote2            int    `json:"vote2"`
 	Vote3            int    `json:"vote3"`
+}
+
+type DecryptRequest struct {
+	EncrytedVotes string `json:"encryptedVotes"`
 }
 
 func GenerateProofHandler(c *gin.Context) {
@@ -29,7 +31,14 @@ func GenerateProofHandler(c *gin.Context) {
 
 	fmt.Printf("%+v\n", pr)
 
-	err := zk.GenerateProof(pr.VotePower, pr.Vote0, pr.Vote1, pr.Vote2, pr.Vote3, pr.PublicKeyX, pr.PublicKeyY, pr.EncryptedBullets)
+	electionKeys, err := zk.GetElectionKeys()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
+		return
+	}
+
+	err = zk.GenerateProof(pr.VotePower, pr.Vote0, pr.Vote1, pr.Vote2, pr.Vote3, electionKeys.PublicKeyX,
+		electionKeys.PublicKeyY, pr.EncryptedBullets)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
 		return
@@ -61,7 +70,22 @@ func GetCallDataHandler(c *gin.Context) {
 
 func DecryptHandler(c *gin.Context) {
 
-	c.String(http.StatusOK, "OK")
+	var dr DecryptRequest
+
+	if err := c.ShouldBindJSON(&dr); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	key, err := zk.GetElectionKeys()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
+		return
+	}
+
+	decryptedVotes := zk.DecryptEncryprtedBulletBox(dr.EncrytedVotes, key.PrivateKey)
+
+	c.JSON(http.StatusOK, gin.H{"status": "ok", "decryptedVotes": decryptedVotes})
 }
 
 func ElectionInitHandler(c *gin.Context) {

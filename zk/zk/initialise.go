@@ -19,12 +19,6 @@ import (
 
 const circuitSetupPath = "/var/tmp/agyso-daovote/circuit"
 
-type KeyData struct {
-	PrivateKey string `json:"privateKey"`
-	PublicKeyX string `json:"publicKeyX"`
-	PublicKeyY string `json:"publicKeyY"`
-}
-
 // Setup circuit stuff
 func SetupCircuit() {
 

@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 )
 
-// TODO use system path
-const daovotersPath = "/home/mrk/devel/agyso/aligned24/agyso-daovote/sdk/daovote-rs/target/debug/daovote-rs"
+// const daovotersPath = "/home/mrk/devel/agyso/aligned24/agyso-daovote/sdk/daovote-rs/target/debug/daovote-rs"
+const daovotersPath = "daovote-rs"
 
 // Seriaslise and return calldata
 func ExecAgysoDaoVoteRs() (calldata map[string]interface{}, err error) {
