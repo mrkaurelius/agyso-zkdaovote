@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function Menu() {
   return (
-    <GridItem area={"nav"}>
+    <GridItem area={"nav"} >
       <Flex
         pos="sticky"
         left="5"
@@ -16,13 +16,13 @@ function Menu() {
         flexDir="column"
       >
         <Link to="/">
-          <Button m="3" mt="5" size="md" height="60px" border="2px" colorScheme="blue">
+          <Button m="3" mt="5" size="md" height="60px" border="2px" colorScheme="blue" width="150px">
             Cast Vote
           </Button>
         </Link>
 
         <Link to="/results">
-          <Button m="3" mt="1" size="md" height="60px" border="2px" colorScheme="red">
+          <Button m="3" mt="1" size="md" height="60px" border="2px" colorScheme="red" width="150px">
             Reveal Results
           </Button>
         </Link>

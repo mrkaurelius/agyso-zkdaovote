@@ -31,9 +31,9 @@ function Wallet() {
   };
 
   return myBool ? (
-    <GridItem area={"header"}>
+    <GridItem  area={"header"}>
       <Flex>
-        <Spacer />
+        <Spacer/>
         <Box
           p="4"
           paddingRight={4}

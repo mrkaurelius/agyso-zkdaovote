@@ -164,7 +164,7 @@ function Voting() {
   };
 
   return (
-    <Box margin="12">
+    <Box margin="12" >
       <Center>
         <VStack>
           <HStack spacing="48px">

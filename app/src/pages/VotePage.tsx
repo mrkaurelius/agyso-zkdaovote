@@ -18,9 +18,10 @@ function VotePage() {
       h="100vh"
       color="blackAlpha.700"
       fontWeight="bold"
+      
     >
-      <Wallet></Wallet>
-      <Menu></Menu>
+      <Wallet ></Wallet>
+      <Menu ></Menu>
       <GridItem area={"main"}>
         <Voting></Voting>
       </GridItem>
