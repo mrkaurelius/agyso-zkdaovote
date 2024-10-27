@@ -117,7 +117,12 @@ TODO
 
 ### Kumru A.
 
-Programmer. Github: [mrkaurelius](https://github.com/mrkaurelius). Blog: [kumru.dev](https://kumru.dev).
+Programmer.  [Github](https://github.com/mrkaurelius),  [Blog](https://kumru.dev).
+
+
+### Dogan A.
+Applied Cryptographer. [Scholar](https://scholar.google.com/citations?user=p97l-EEAAAAJ&hl=tr), [Github](https://github.com/midmotor)
+
 
 ### 
 
@@ -129,3 +134,4 @@ Programmer. Github: [mrkaurelius](https://github.com/mrkaurelius). Blog: [kumru.
    1. Deploying protocol and app in one web app (dapp).
    2. Proof creation on browser.
 3. Testnet deployment 
+4. Splitting the private key, which will end the voting and decrypt the encrypted votes, using secret sharing and threshold decryption.
