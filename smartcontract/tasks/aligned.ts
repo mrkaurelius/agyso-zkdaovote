@@ -13,10 +13,7 @@ interface CallData {
   index_in_batch: number;
 }
 
-// TODO wait on transaction
-
-// 0x3fb7950daC347a4C80081a1fB2E9D50e17CB255f
-const contractAddress = "0x7690854F34f7EFDe10030761eAeB51d6D83207C8";
+const contractAddress = "0x2DF98167F436d676B57614892Fb490D749b9c43b";
 
 const getBalance = async (hre: HardhatRuntimeEnvironment) => {
   const ethers = hre.ethers;
@@ -78,12 +75,12 @@ const createAccount = async (hre: HardhatRuntimeEnvironment) => {
 
 const aligned = async (args: any, hre: HardhatRuntimeEnvironment) => {
   // await createAccount(hre);
-
   // await finishElection(hre);
 
   await getBallotBox(hre);
-  await castZKVote(hre);
-  await getBallotBox(hre);
+
+  // await castZKVote(hre);
+  // await getBallotBox(hre);
   // await finishElection(hre);
   // await getBallotBox(hre);
 };

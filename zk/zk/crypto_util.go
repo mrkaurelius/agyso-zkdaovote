@@ -94,22 +94,22 @@ func GetElectionKeys() (key *KeyData, err error) {
 	return key, nil
 }
 
-func DecryptEncryprtedBulletBox(encryped string, secretStr string) []int {
+func DecryptEncryprtedBallotBox(encryped string, secretStr string) []int {
 	secret, _ := new(big.Int).SetString(secretStr, 10)
-	return DecryptEncryptedBulletsFromStr(encryped, secret)
+	return DecryptEncryptedBallotsFromStr(encryped, secret)
 }
 
-func DecryptEncryptedBulletsFromStr(str string, sec *big.Int) []int {
+func DecryptEncryptedBallotsFromStr(str string, sec *big.Int) []int {
 	votes := StringToVotesSolidity(str)
 
-	return DecryptEncryptedBulletsFrom(votes, sec)
+	return DecryptEncryptedBallotsFrom(votes, sec)
 
 }
 
-func DecryptEncryptedBulletsFrom(bullets *Votes, sec *big.Int) []int {
+func DecryptEncryptedBallotsFrom(ballots *Votes, sec *big.Int) []int {
 	decVote := make([]int, 4)
 	for i := 0; i < 4; i++ {
-		decVote[i] = DecryptElgamalBrute(bullets.ElGamals[i], sec)
+		decVote[i] = DecryptElgamalBrute(ballots.ElGamals[i], sec)
 	}
 
 	return decVote
@@ -129,5 +129,5 @@ func DecryptElgamalBrute(enc *ElGamal, sec *big.Int) int {
 		}
 	}
 
-	return 0
+	return 1111
 }

@@ -1,4 +1,4 @@
-# AGYSO DAO Vote Smartcontract
+# agyso-zkdaovote Verifier Contract
 
 AGYSO Account
 Holesky Contract Address: 0x7690854F34f7EFDe10030761eAeB51d6D83207C8

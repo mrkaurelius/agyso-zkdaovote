@@ -1,4 +1,5 @@
-import { Divider, GridItem, Flex, Heading } from "@chakra-ui/react";
+import { Divider, GridItem, Flex, Heading, Button, Box } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 function Menu() {
   return (
@@ -13,26 +14,18 @@ function Menu() {
         shadow="dark-lg"
         w={"200px"}
         flexDir="column"
-        justifyContent="space-between"
       >
-        <Flex
-          p="5%"
-          flexDir="column"
-          w="100%"
-          alignItems={"flex-start"}
-          as="nav"
-        ></Flex>
+        <Link to="/">
+          <Button m="3" mt="5" size="md" height="60px" border="2px" colorScheme="blue">
+            Cast Vote
+          </Button>
+        </Link>
 
-        <Flex p="5%" flexDir="column" w="100%" alignItems={"flex-start"} mb={4}>
-          <Divider display={"flex"} />
-          <Flex mt={4} align="center">
-            <Flex flexDir="column" ml={4} display={"flex"}>
-              <Heading as="h3" size="sm">
-                AGYSO
-              </Heading>
-            </Flex>
-          </Flex>
-        </Flex>
+        <Link to="/results">
+          <Button m="3" mt="1" size="md" height="60px" border="2px" colorScheme="red">
+            Reveal Results
+          </Button>
+        </Link>
       </Flex>
     </GridItem>
   );

@@ -2,9 +2,9 @@ package zk
 
 import (
 	"bytes"
-	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
+	"math/big"
 	"os"
 	"path/filepath"
 
@@ -27,7 +27,8 @@ func SetupCircuit() {
 		panic(err)
 	}
 
-	priv, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
+	// priv, _ := rand.Int(rand.Reader, ecc.BN254.ScalarField())
+	priv, _ := new(big.Int).SetString("100", 10)
 	privateKey := priv.String()
 
 	pub := new(bn254.PointAffine).ScalarMultiplication(&Base, priv)

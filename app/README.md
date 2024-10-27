@@ -1,8 +1,7 @@
-# AGYSO DAO Vote App
+# agyso-zkdaovote App
 
-TODO
+Run vite app with
 
 ```sh
-../zk/build/zk.wasm public
+npm run dev
 ```
-

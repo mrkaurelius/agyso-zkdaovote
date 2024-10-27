@@ -1,9 +1,10 @@
-import { Grid, GridItem } from "@chakra-ui/react";
-import BulletVoting from "./components/Voting";
-import Menu from "./components/Menu";
-import Wallet from "./components/Navbar";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
 
-function App() {
+import Voting from "../components/Voting";
+import Menu from "../components/Menu";
+import Wallet from "../components/Wallet";
+
+function VotePage() {
   return (
     <Grid
       templateAreas={`
@@ -21,10 +22,10 @@ function App() {
       <Wallet></Wallet>
       <Menu></Menu>
       <GridItem area={"main"}>
-        <BulletVoting></BulletVoting>
+        <Voting></Voting>
       </GridItem>
     </Grid>
   );
 }
 
-export default App;
+export default VotePage;

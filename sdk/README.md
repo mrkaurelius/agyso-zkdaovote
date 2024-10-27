@@ -1,6 +1,6 @@
-# AGYSO Dao Vote Aligned SDK
+# agyso-zkdaovote SDK
 
-Aligned sdk experiments.
+DAO Vote aligned sdk tools.
 
 aligned tool.
 

@@ -10,7 +10,7 @@ import (
 
 type ProofRequest struct {
 	VotePower        int    `json:"votePower"`        // Get vote power from smart contract
-	EncryptedBullets string `json:"encryptedBullets"` // Homomorphic encrypted bullets
+	EncryptedBallots string `json:"encryptedBallots"` // Homomorphic encrypted ballots
 	Vote0            int    `json:"vote0"`
 	Vote1            int    `json:"vote1"`
 	Vote2            int    `json:"vote2"`
@@ -38,7 +38,7 @@ func GenerateProofHandler(c *gin.Context) {
 	}
 
 	err = zk.GenerateProof(pr.VotePower, pr.Vote0, pr.Vote1, pr.Vote2, pr.Vote3, electionKeys.PublicKeyX,
-		electionKeys.PublicKeyY, pr.EncryptedBullets)
+		electionKeys.PublicKeyY, pr.EncryptedBallots)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
 		return
@@ -83,7 +83,7 @@ func DecryptHandler(c *gin.Context) {
 		return
 	}
 
-	decryptedVotes := zk.DecryptEncryprtedBulletBox(dr.EncrytedVotes, key.PrivateKey)
+	decryptedVotes := zk.DecryptEncryprtedBallotBox(dr.EncrytedVotes, key.PrivateKey)
 
 	c.JSON(http.StatusOK, gin.H{"status": "ok", "decryptedVotes": decryptedVotes})
 }

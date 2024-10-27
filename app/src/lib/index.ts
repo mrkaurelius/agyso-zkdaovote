@@ -3,7 +3,7 @@ import { Contract } from "ethers";
 import { web3Config } from "./smartcontract";
 import { BrowserProvider } from "ethers";
 
-const contractAddress = "0x3fb7950daC347a4C80081a1fB2E9D50e17CB255f";
+const contractAddress = "0x2DF98167F436d676B57614892Fb490D749b9c43b";
 const provider = new BrowserProvider(window.ethereum);
 
 const signer = await provider.getSigner();

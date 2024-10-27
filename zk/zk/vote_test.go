@@ -195,5 +195,5 @@ func TestStringToDec(t *testing.T) {
 	// 	t.Fatal(err)
 	// }
 
-	DecryptEncryptedBulletsFromStr(str, priv)
+	DecryptEncryptedBallotsFromStr(str, priv)
 }

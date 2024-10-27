@@ -1,6 +1,11 @@
 # agyso-zkdaovote
 
-Privacy preserving DAO voting using aligned network and PLONK proofs.
+Privacy preserving DAO voting using **AlignedLayer** and PLONK proofs.
+
+## Deployments
+
+Network: Ethereum Holesky  
+[AGYSO DAO Vote Validator Contract: 0x2DF98167F436d676B57614892Fb490D749b9c43b](https://holesky.etherscan.io/address/0x2df98167f436d676b57614892fb490d749b9c43b)
 
 ## Protocol
 
@@ -60,17 +65,12 @@ represents votes.
 * **EncVoteOld**  represents the encrypted votes to be exchanged in the chain.
 * **EncVoteNew**  represents new encrypted votes added to EncVoteOld.
 
-## Deployments
-
-Network: Ethereum Holesky.
-Contract: TODO
-
 ## Running agyso-daovote
 
 Tested with Debian 11, Ubuntu 22, go1.23, rust 1.82.0
 
 0. `git clone --recursive https://github.com/mrkaurelius/agyso-zkdaovote`
-1. Copy `vault` to `/var/tmp/agyso-daovote/vault`
+1. Copy `vault` to `/var/tmp/agyso-daovote/vault` TODO automation
 2. Build `sdk/daovote-rs` and add to PATH
 3. Initialise circuit and protocol with `cd ./zk && make cli`
 4. Start `zk/cmd/daovote-zk-service` service which generates proof and submit proofs to aligned layer
@@ -85,6 +85,8 @@ Tested with Debian 11, Ubuntu 22, go1.23, rust 1.82.0
 - `zk/cmd/daovote-zk-service` generates proof, submit proof using `sdk/daovote-rs` (aligned sdk)
 
 ### sdk
+
+aligned_layer verison: `v0.9.2`
 
 TODO
 
