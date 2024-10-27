@@ -96,7 +96,9 @@ TODO
 
 ### app
 
-TODO
+![](./docs/vote.png)
+
+![](./docs/reveal.png)
 
 ## TODO 
 
