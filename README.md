@@ -76,7 +76,7 @@ Tested with Debian 11, Ubuntu 22, go1.23, rust 1.82.0.
 2. Build `sdk/daovote-rs` and add generated binary to shell PATH
 3. Initialise circuit and protocol with `cd ./zk && make cli`
 4. Start `daovote-zk-service` service with `cd ./zk && make service` which generates proof and submit proofs to aligned layer
-5. Start dapp frontend with `cd ./app && npm run dev`
+5. Start dapp frontend with `cd ./app && npm i && npm run dev`
 6. profit :)
 
 ## Directories
@@ -121,10 +121,8 @@ Programmer.  [Github](https://github.com/mrkaurelius),  [Blog](https://kumru.dev
 
 
 ### Dogan A.
+
 Applied Cryptographer. [Scholar](https://scholar.google.com/citations?user=p97l-EEAAAAJ&hl=tr), [Github](https://github.com/midmotor)
-
-
-### 
 
 ## Project Roadmap
 
