@@ -1,6 +1,9 @@
 # agyso-zkdaovote
 
-Privacy preserving DAO voting using **AlignedLayer** and PLONK proofs.
+Privacy preserving DAO voting using **AlignedLayer** and PLONK proofs. In DAOs (Decentralized Autonomous Organizations), voting is the basic mechanism that enables the community to make decisions together. In these systems, each member generally votes in proportion to the amount of tokens he/she owns. All transactions can be viewed transparently in voting on the blockchain; It can be clearly tracked who has how much voting power and how they vote. Although this transparency provides advantages, it also eliminates user privacy. In current DAO voting systems, voting preferences are not hidden. Anyone can review the game via a user's wallet address, meaning private preferences are disclosed. This situation is worrying in matters where anonymity and personal privacy become important.
+
+
+In this project, homomorphic encryption and zero-knowledge proof technologies are combined to protect users' privacy and ensure a fair voting process. Users cast encrypted votes using their voting power, which is determined by the amount of tokens they own. Thanks to homomorphic encryption during the voting process, these votes remain anonymous, but the total votes can be verified by the community. Zero-knowledge proofs verify that each user votes according to their voting power and does not cast negative votes. Thus, the reliability and integrity of the system is ensured while each individual's preferences remain confidential.
 
 ## Deployments
 
@@ -9,8 +12,7 @@ Network: Ethereum Holesky
 
 ## Protocol
 
-TL;DR
-A blockchain-based voting system designed to preserve voter privacy and ensure accurate vote weighting based on each participant’s token balance (vote power). The system achieves confidentiality by storing encrypted votes on-chain, leveraging homomorphic encryption for private vote aggregation, and using zero-knowledge proofs (ZKPs) for verification. 
+TL;DR A blockchain-based voting system designed to preserve voter privacy and ensure accurate vote weighting based on each participant’s token balance (vote power). The system achieves confidentiality by storing encrypted votes on-chain, leveraging homomorphic encryption for private vote aggregation, and using zero-knowledge proofs (ZKPs) for verification. 
 
 ### Homomorphic ElGamal Encryption
 In Protocol, all ciphertexts proceed on ElGamal Homomorphic Encryption. First, the person who initiates the vote generates a private-public key pair and shares the public key. Voters then cast their votes using this public key. Votes are collected by homomorphic addition and decrypted when the voting process is finished. 
