@@ -131,6 +131,9 @@ Applied Cryptographer. [Scholar](https://scholar.google.com/citations?user=p97l-
 
 Programmer. [Github](https://github.com/NasuhDincer), [Linkedin](https://www.linkedin.com/in/nasuhdincer/)
 
+### Bas B.
+Programmer. [Github](https://github.com/yilmazburakbas), [Linkedin](https://www.linkedin.com/in/yilmaz-burak-bas)
+
 ## Project Roadmap
 
 1. Protocol robustness and decentralization.
