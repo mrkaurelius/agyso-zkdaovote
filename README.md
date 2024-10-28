@@ -5,6 +5,8 @@ Privacy-preserving DAO voting using **AlignedLayer** and PLONK proofs. In DAOs (
 
 In this project, homomorphic encryption and zero-knowledge proof technologies are combined to protect users' privacy and ensure a fair voting process. Users cast encrypted votes using their voting power, which is determined by the amount of tokens they own. Thanks to homomorphic encryption during the voting process, these votes remain anonymous, but the total votes can be verified by the community. Zero-knowledge proofs verify that each user votes according to their voting power and does not cast negative votes. Thus, the reliability and integrity of the system are ensured while each individual's preferences remain confidential.
 
+After reviewing the literature at the end of the project, we realized that it is similar to the [Helios](https://www.usenix.org/legacy/events/sec08/tech/full_papers/adida/adida.pdf) protocol. However, due to the year it was designed, zk-snarks were not used on Helios. Also, since Helios is a classic voting, there is no vote power and only 1 vote can be given.
+
 ## Deployments
 
 Network: Ethereum Holesky  
