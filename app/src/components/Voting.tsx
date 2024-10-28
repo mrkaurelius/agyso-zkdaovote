@@ -47,11 +47,13 @@ function Voting() {
     setZkVoteLoading(true);
     setZkVoteLoadingText("Generating proof for vote");
 
+    let encryptedVotesNoPrefix;
     let encryptedBallots = await getAGYSOContract().getBallotBox();
-    if (encryptedBallots === "0x") encryptedBallots = "0";
-
-
-    let encryptedVotesNoPrefix = encryptedBallots.slice(2, encryptedBallots.length);
+    if (encryptedBallots === "0x") {
+      encryptedVotesNoPrefix = "0";
+    } else {
+       encryptedVotesNoPrefix = encryptedBallots.slice(2, encryptedBallots.length);
+    }
 
     const proofBody = {
       votePower: 5,
@@ -164,7 +166,7 @@ function Voting() {
   };
 
   return (
-    <Box margin="12" >
+    <Box margin="12">
       <Center>
         <VStack>
           <HStack spacing="48px">
@@ -326,7 +328,6 @@ function Voting() {
           >
             Cast Vote On-Chain
           </Button>
-
         </VStack>
       </Center>
     </Box>

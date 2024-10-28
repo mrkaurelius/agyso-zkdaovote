@@ -75,8 +75,8 @@ const createAccount = async (hre: HardhatRuntimeEnvironment) => {
 
 const aligned = async (args: any, hre: HardhatRuntimeEnvironment) => {
   // await createAccount(hre);
-  // await finishElection(hre);
 
+  // await finishElection(hre);
   await getBallotBox(hre);
 
   // await castZKVote(hre);

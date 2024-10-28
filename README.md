@@ -90,7 +90,7 @@ Go codebase for zk.
 `zk/cmd/zkdaovote-cli` handles zkdaovote protocol initialization which includes circuit and key generation.  
 
 `zk/cmd/zkdaovote-service` serves as an HTTP service for performing generation and proof submission to the aligned layer. It
-uses `daovote-rs` for aligned network operations.
+uses `daovote-rs` for aligned network operations. You could also use `imsonia.json` file for `zkvote-service` request examples.
 
 ### sdk
 
@@ -113,7 +113,7 @@ Fronted app for zkdaovote. Developed with react, vite chakra-ui.
 
 ## Architecture Diagram
 
-TODO
+![](./docs/zkdaovote_architecture_diagram.drawio.png)
 
 ## Team
 
@@ -121,11 +121,9 @@ TODO
 
 Programmer.  [Github](https://github.com/mrkaurelius),  [Blog](https://kumru.dev).
 
-
 ### Dogan A.
 
 Applied Cryptographer. [Scholar](https://scholar.google.com/citations?user=p97l-EEAAAAJ&hl=tr), [Github](https://github.com/midmotor)
-
 
 ### Dincer N.
 
@@ -137,7 +135,6 @@ Programmer. [Github](https://github.com/yilmazburakbas), [Linkedin](https://www.
 ## Project Roadmap
 
 1. Protocol robustness and decentralization.
-    1. TODO 
 2. Web-native decentralized application deployment.
    1. Deploying protocol and app in one web app (dapp).
    2. Proof creation on the browser.

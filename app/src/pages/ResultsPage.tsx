@@ -37,15 +37,19 @@ function ResultsPage() {
 
   const handleRevealResults = async () => {
     let encryptedBallots = (await getAGYSOContract().getBallotBox()) as string;
-    if (encryptedBallots == "0x") encryptedBallots = "0";
 
-    let encryptedVotesNoPrefix = encryptedBallots.slice(2, encryptedBallots.length);
-
-    console.log(encryptedBallots)
+    let encryptedVotesNoPrefix;
+    if (encryptedBallots === "0x" || encryptedBallots === "") {
+      encryptedVotesNoPrefix = "0";
+    } else {
+      encryptedVotesNoPrefix = encryptedBallots.slice(2, encryptedBallots.length);
+    }
 
     const payload = {
       encryptedVotes: encryptedVotesNoPrefix,
     };
+
+    console.log(payload)
 
     const options = {
       method: "POST",
@@ -74,7 +78,7 @@ function ResultsPage() {
       });
     }
 
-    console.log(decryptedVoteArr)
+    console.log(decryptedVoteArr);
 
     setVote0(decryptedVoteArr[0].toString());
     setVote1(decryptedVoteArr[1].toString());
