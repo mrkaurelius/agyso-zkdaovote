@@ -1,9 +1,9 @@
 # agyso-zkdaovote
 
-Privacy preserving DAO voting using **AlignedLayer** and PLONK proofs. In DAOs (Decentralized Autonomous Organizations), voting is the basic mechanism that enables the community to make decisions together. In these systems, each member generally votes in proportion to the amount of tokens he/she owns. All transactions can be viewed transparently in voting on the blockchain; It can be clearly tracked who has how much voting power and how they vote. Although this transparency provides advantages, it also eliminates user privacy. In current DAO voting systems, voting preferences are not hidden. Anyone can review the game via a user's wallet address, meaning private preferences are disclosed. This situation is worrying in matters where anonymity and personal privacy become important.
+Privacy-preserving DAO voting using **AlignedLayer** and PLONK proofs. In DAOs (Decentralized Autonomous Organizations), voting is the basic mechanism that enables the community to make decisions together. In these systems, each member generally votes in proportion to the tokens he/she owns. All transactions can be viewed transparently in voting on the blockchain; who has how much voting power and how they vote can be clearly tracked. Although this transparency provides advantages, it also eliminates user privacy. In current DAO voting systems, voting preferences are not hidden. Anyone can review the game via a user's wallet address, meaning private preferences are disclosed. This situation is worrying in matters where anonymity and personal privacy become important.
 
 
-In this project, homomorphic encryption and zero-knowledge proof technologies are combined to protect users' privacy and ensure a fair voting process. Users cast encrypted votes using their voting power, which is determined by the amount of tokens they own. Thanks to homomorphic encryption during the voting process, these votes remain anonymous, but the total votes can be verified by the community. Zero-knowledge proofs verify that each user votes according to their voting power and does not cast negative votes. Thus, the reliability and integrity of the system is ensured while each individual's preferences remain confidential.
+In this project, homomorphic encryption and zero-knowledge proof technologies are combined to protect users' privacy and ensure a fair voting process. Users cast encrypted votes using their voting power, which is determined by the amount of tokens they own. Thanks to homomorphic encryption during the voting process, these votes remain anonymous, but the total votes can be verified by the community. Zero-knowledge proofs verify that each user votes according to their voting power and does not cast negative votes. Thus, the reliability and integrity of the system are ensured while each individual's preferences remain confidential.
 
 ## Deployments
 
@@ -16,9 +16,9 @@ TL;DR A blockchain-based voting system designed to preserve voter privacy and en
 
 ### Homomorphic ElGamal Encryption
 In Protocol, all ciphertexts proceed on ElGamal Homomorphic Encryption. First, the person who initiates the vote generates a private-public key pair and shares the public key. Voters then cast their votes using this public key. Votes are collected by homomorphic addition and decrypted when the voting process is finished. 
-The ElGamal encryption implementation outside and inside the circuit is available in the  `zk/zk` folder. Reduced form of Twisted Edwards]of [BN254](https://iden3-docs.readthedocs.io/en/latest/_downloads/33717d75ab84e11313cc0d8a090b636f/Baby-Jubjub.pdf) was used as the elliptic curve.
+The ElGamal encryption implementation outside and inside the circuit is available in the  `zk/zk` folder. The reduced form of Twisted Edwards]of [BN254](https://iden3-docs.readthedocs.io/en/latest/_downloads/33717d75ab84e11313cc0d8a090b636f/Baby-Jubjub.pdf) was used as the elliptic curve.
 
-Assume $(x, Y) = (x,\hspace{0.1in} x\cdot G)$ is a private-public key pair. The encryption and decryption as follows:
+Assume $(x, Y) = (x,\hspace{0.1in} x\cdot G)$ is a private-public key pair. The encryption and decryption are as follows:
 
 $$ Enc(m,Y) = (C_1, \hspace{0.1in} C_2) = (r \cdot  G, \hspace{0.1in} m \cdot G + r \cdot Y ) $$
 
@@ -40,9 +40,9 @@ Then, by decrypting it, we obtain the sum of the two plaintexts $m' + m$.
 
 ### Zero-Knowledge Proof (ZKP)
 
-Plonk on BN254 was used in the project. Since the protocol is based on encrypted votes, it must be proven that the encrypted votes are created properly. ZKP verify the following:
+Plonk on BN254 was used in the project. Since the protocol is based on encrypted votes, it must be proven that the encrypted votes are created properly. ZKP verified the following:
 
-1. **Vote Power Validation**: ZKP confirms the encrypted votes accurately represents the voter’s token-based power (No more votes were given than token power) .
+1. **Vote Power Validation**: ZKP confirms the encrypted votes accurately represent the voter’s token-based power (No more votes were given than token power).
 2. **Non-Negative Vote Check**: ZKP ensures no negative values are encrypted.
 3. **Homomorphic Summation Correctness**: ZKP confirms that homomorphic encryption and summation were correctly applied, enabling accurate aggregation without revealing individual votes.
 
@@ -60,7 +60,7 @@ type CircuitMain struct {
  ```
 
 * **VoteWeight** represents vote power.
-* **MasterPubKey** represents encryption public key.
+* **MasterPubKey** represents the encryption public key.
 * **Vote** 
 represents votes.
 * **Randoms** represents randoms used in encryption.
@@ -73,9 +73,9 @@ Tested with Debian 11, Ubuntu 22, go1.23, rust 1.82.0.
 
 0. Clone repository `git clone --recursive https://github.com/mrkaurelius/agyso-zkdaovote`
 1. Copy `./agyso-zkdaovote/vault` dir to `/var/tmp/agyso-daovote/vault`
-2. Build `sdk/daovote-rs` and add generated binary to shell PATH
+2. Build `sdk/daovote-rs` and add the generated binary to the shell PATH
 3. Initialise circuit and protocol with `cd ./zk && make cli`
-4. Start `daovote-zk-service` service with `cd ./zk && make service` which generates proof and submit proofs to aligned layer
+4. Start `daovote-zk-service` service with `cd ./zk && make service` which generates proof and submits proofs to the aligned layer
 5. Start dapp frontend with `cd ./app && npm i && npm run dev`
 6. profit :)
 
@@ -85,20 +85,20 @@ Tested with Debian 11, Ubuntu 22, go1.23, rust 1.82.0.
 
 Go codebase for zk. 
 
-`zk/cmd/zkdaovote-cli` handles zkdaovote protocol initialisation which includes circuit and key generation.  
+`zk/cmd/zkdaovote-cli` handles zkdaovote protocol initialization which includes circuit and key generation.  
 
-`zk/cmd/zkdaovote-service` serves an HTTP service for performing generation and proof submition to aligned layer. It
-uses `daovote-rs` for aligned network operaitons.
+`zk/cmd/zkdaovote-service` serves as an HTTP service for performing generation and proof submission to the aligned layer. It
+uses `daovote-rs` for aligned network operations.
 
 ### sdk
 
-`daovote-rs` uses aligned-sdk for submitting proofs to aligned layer. It's also generates calldata for `app` to use.
+`daovote-rs` uses aligned-SDK for submitting proofs to the aligned layer. It also generates call data for `app` to use.
 
-Used aligned_layer verison: `v0.9.2`.
+Used aligned_layer version: `v0.9.2`.
 
-### smartcontract
+### smart-contract
 
-An Hardhat project which inludes `AGYSODaoVoteValidator.sol` contract. Our contract verifies vote proof and set state
+A Hardhat project which includes `AGYSODaoVoteValidator.sol` contract. Our contract verifies vote proof and set state
 accordingly.
 
 ### app
@@ -109,7 +109,7 @@ Fronted app for zkdaovote. Developed with react, vite chakra-ui.
 
 ![](./docs/reveal.png)
 
-## Arhictecture Diagram
+## Architecture Diagram
 
 TODO
 
@@ -124,12 +124,17 @@ Programmer.  [Github](https://github.com/mrkaurelius),  [Blog](https://kumru.dev
 
 Applied Cryptographer. [Scholar](https://scholar.google.com/citations?user=p97l-EEAAAAJ&hl=tr), [Github](https://github.com/midmotor)
 
+
+### Dincer N.
+
+Programmer. [Github](https://github.com/NasuhDincer), [Linkedin](https://www.linkedin.com/in/nasuhdincer/)
+
 ## Project Roadmap
 
-1. Protocol robustness and decentralisation.
+1. Protocol robustness and decentralization.
     1. TODO 
-2. Web native decentralized applicaiton deployment.
+2. Web-native decentralized application deployment.
    1. Deploying protocol and app in one web app (dapp).
-   2. Proof creation on browser.
+   2. Proof creation on the browser.
 3. Testnet deployment 
 4. Splitting the private key, which will end the voting and decrypt the encrypted votes, using secret sharing and threshold decryption.
